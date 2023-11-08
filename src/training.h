@@ -23,7 +23,7 @@
 
 namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
 
-#include "../td3/parameters.h"
+#include "parameters_training.h"
 
 #include <vector>
 #include <queue>

@@ -2,7 +2,7 @@
 if(BACKPROP_TOOLS_ENABLE_JSON AND BACKPROP_TOOLS_ENABLE_BOOST_BEAST)
 find_package(Boost REQUIRED)
 message(STATUS "Boost version: ${Boost_VERSION}")
-add_executable(rl_environments_multirotor_ui ui.cpp)
+add_executable(rl_environments_multirotor_ui ui/ui.cpp)
 target_link_libraries(
         rl_environments_multirotor_ui
         PRIVATE

@@ -59,7 +59,6 @@ window.onload = function(){
     const infoContainer = document.getElementById("infoContainer")
     infoContainer.style.display = "block"
     infoContainer.innerHTML = info
-    // document.getElementById("controlContainer").style.display = "block"
   }
 
   function onWindowResize(){
@@ -108,11 +107,8 @@ window.onload = function(){
   };
 
   ws.onmessage = function(event) {
-    // console.log('Message from server:', event.data);
     let {channel, data} = JSON.parse(event.data)
     if (channel === "addDrone") {
-      // console.log("received addDrone message")
-      // console.log(data)
       window.addDrone(data.id, data.origin, data.model || default_model, data.display_options);
     }
     else{
@@ -130,21 +126,20 @@ window.onload = function(){
         }
         else{
           if (channel === "status") {
-            // button.innerHTML = "Training time: " + Math.round(data.time) + "s (" + Math.round(data.progress * 100) + "%)"
             button.innerHTML = "Training progress: " + Math.round(data.progress * 100) + "%"
             if(data.finished && !window.finished){
               window.finished = true;
               document.getElementById("canvasContainer").style.display = "none"
               document.getElementById("button").style.display = "none"
               var resultContainer = document.getElementById("resultContainer")
-              resultContainer.innerHTML = "Total training time: " + 18 + " s" //Math.round(data.time) + "s"
+              // resultContainer.innerHTML = "Total training time: " + Math.round(data.time) + "s"
+              resultContainer.innerHTML = "Finished"
               resultContainer.style.display = "block"
             }
           }
         }
       }
     }
-    // window.addDrone(data.id, data.origin, dtmodel || default_model, {displayGlobalCoordinateSystem: true, displayIMUCoordinateSystem: true, displayActions: true})
   };
 
   ws.onerror = function(error) {
@@ -155,7 +150,6 @@ window.onload = function(){
     if (event.wasClean) {
       console.log('Connection closed cleanly, code=', event.code, 'reason=', event.reason);
     } else {
-      // Connection closed abnormally, e.g., server process killed or network down
       console.error('Connection died');
     }
   };
@@ -166,21 +160,4 @@ window.onload = function(){
       "data": null
     }))
   }, false)
-
-    // window.addDrone("default", default_model, {displayGlobalCoordinateSystem: true, displayIMUCoordinateSystem: true, displayActions: true})
-    // window.electronAPI.addDrone((event, id, origin, model) => {
-    //   if(!model){
-    //     console.log("No model provided, using default")
-    //   }
-    //   window.addDrone(id, origin, model || default_model, {displayGlobalCoordinateSystem: true, displayIMUCoordinateSystem: true, displayActions: true})
-    // })
-
-    // window.electronAPI.setDroneState((event, id, droneState) => {
-    //   if(id in window.drones){
-    //     window.drones[id].setState(droneState)
-    //   }
-    //   else{
-    //     throw new Error("Drone not found")
-    //   }
-    // })
 }
