@@ -164,7 +164,7 @@ namespace multirotor_training{
             using ACTOR_CRITIC_TYPE = bpt::rl::algorithms::td3::ActorCritic<ACTOR_CRITIC_SPEC>;
 
 
-            static constexpr bool ACTOR_ENABLE_CHECKPOINTS = true; //!BENCHMARK;
+            static constexpr bool ACTOR_ENABLE_CHECKPOINTS = !BENCHMARK;
             static constexpr TI ACTOR_CHECKPOINT_INTERVAL = 100000;
             static constexpr bool DETERMINISTIC_EVALUATION = !BENCHMARK;
             static constexpr TI EVALUATION_INTERVAL = 10000;
@@ -705,6 +705,9 @@ namespace multirotor_training{
         }
         template <typename CONFIG>
         void step(TrainingState<CONFIG>& ts){
+            if(ts.step % 10000 == 0){
+                std::cout << "Step: " << ts.step << std::endl;
+            }
             step_logger(ts);
             step_checkpoint(ts);
             step_validation(ts);

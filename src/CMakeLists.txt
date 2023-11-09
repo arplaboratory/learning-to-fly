@@ -8,7 +8,6 @@ target_link_libraries(
         PRIVATE
         backprop_tools
         Boost::boost
-        nlohmann_json::nlohmann_json
 )
 endif()
 
