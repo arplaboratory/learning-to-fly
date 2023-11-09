@@ -60,7 +60,7 @@ namespace multirotor_training{
         };
         template <typename T_ABLATION_SPEC>
         struct CoreConfig{
-            static constexpr bool BENCHMARK = false;
+            static constexpr bool BENCHMARK = true;
             using ABLATION_SPEC = T_ABLATION_SPEC;
             using DEV_SPEC = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::DefaultCPUSpecification, bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, bpt::devices::logging::CPU_TENSORBOARD>>;
 //    using DEVICE = bpt::devices::CPU<DEV_SPEC>;
