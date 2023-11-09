@@ -25,3 +25,6 @@ target_link_libraries(
         PRIVATE
         backprop_tools
 )
+
+
+add_subdirectory(cuda)

@@ -17,5 +17,8 @@ if(APPLE)
     set(BACKPROP_TOOLS_BACKEND_ENABLE_ACCELERATE ON)
 endif()
 
+set(BACKPROP_TOOLS_ENABLE_TESTS ON)
 add_subdirectory(external/backprop_tools)
 add_subdirectory(src)
+
+add_subdirectory(test)
