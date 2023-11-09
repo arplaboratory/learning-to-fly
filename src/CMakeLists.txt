@@ -7,6 +7,7 @@ target_link_libraries(
         rl_environments_multirotor_ui
         PRIVATE
         backprop_tools
+        learning_to_fly_in_seconds
         Boost::boost
 )
 endif()
@@ -16,6 +17,7 @@ target_link_libraries(
         rl_environments_multirotor_ui_training
         PRIVATE
         backprop_tools
+        learning_to_fly_in_seconds
 )
 
 add_executable(rl_environments_multirotor_ui_ablation_study ablation_study.cpp)
@@ -23,6 +25,7 @@ target_link_libraries(
         rl_environments_multirotor_ui_ablation_study
         PRIVATE
         backprop_tools
+        learning_to_fly_in_seconds
 )
 
 

@@ -1,11 +1,8 @@
-#include "../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_MULTIROTOR_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_MULTIROTOR_H
+#ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_MULTIROTOR_H
+#define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_MULTIROTOR_H
 
-#include "../../../utils/generic/typing.h"
+#include <backprop_tools/utils/generic/typing.h>
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::environments::multirotor{
     template <typename T, typename TI, TI N, typename T_REWARD_FUNCTION>
     struct ParametersBase{
@@ -389,6 +386,5 @@ namespace backprop_tools::rl::environments{
         typename SPEC::PARAMETERS::Dynamics current_dynamics;
     };
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 
 #endif

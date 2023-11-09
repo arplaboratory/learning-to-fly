@@ -1,8 +1,8 @@
 #include <backprop_tools/operations/cpu_mux.h>
 #include <backprop_tools/nn/operations_cpu_mux.h>
 
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
-#include <backprop_tools/rl/environments/multirotor/metrics.h>
+#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
+#include <learning_to_fly_in_seconds/simulator/metrics.h>
 
 #include <backprop_tools/nn_models/sequential/operations_generic.h>
 
@@ -60,9 +60,10 @@ namespace multirotor_training{
         };
         template <typename T_ABLATION_SPEC>
         struct CoreConfig{
-            static constexpr bool BENCHMARK = true;
+            static constexpr bool BENCHMARK = false;
             using ABLATION_SPEC = T_ABLATION_SPEC;
-            using DEV_SPEC = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::DefaultCPUSpecification, bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, bpt::devices::logging::CPU_TENSORBOARD>>;
+            using LOGGER = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::logging::CPU , bpt::devices::logging::CPU_TENSORBOARD<bpt::devices::logging::CPU_TENSORBOARD_FREQUENCY_EXTENSION>>;
+            using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, LOGGER>;
 //    using DEVICE = bpt::devices::CPU<DEV_SPEC>;
             using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
             using T = float;

@@ -1,8 +1,3 @@
-#include "../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI_H
-
 #include "quaternion_helper.h"
 
 #include <boost/beast/core.hpp>
@@ -15,7 +10,6 @@
 
 #include <nlohmann/json.hpp>
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::environments::multirotor {
     namespace beast = boost::beast;         // from <boost/beast.hpp>
     namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -169,6 +163,3 @@ namespace backprop_tools{
     }
 
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
-
-#endif

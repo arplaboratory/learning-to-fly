@@ -1,13 +1,10 @@
-#include "../../../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_REWARD_FUNCTIONS_ABSOLUTE_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_REWARD_FUNCTIONS_ABSOLUTE_H
+#ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_ABSOLUTE_H
+#define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_ABSOLUTE_H
 
 #include "../../multirotor.h"
-#include "../../../../../utils/generic/typing.h"
-#include "../../../../../utils/generic/vector_operations.h"
+#include <backprop_tools/utils/generic/typing.h>
+#include <backprop_tools/utils/generic/vector_operations.h>
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::environments::multirotor::parameters::reward_functions{
     template<typename T>
     struct Absolute{
@@ -61,7 +58,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
             r = (r > 0 || !params.non_negative) ? r : 0;
         }
 
-        constexpr TI cadence = 991;
+        constexpr TI cadence = 9991;
         {
             add_scalar(device, device.logger, "reward/orientation_cost", orientation_cost, cadence);
             add_scalar(device, device.logger, "reward/position_cost", position_cost, cadence);
@@ -98,6 +95,5 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         return r;
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 
 #endif

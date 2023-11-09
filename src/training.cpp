@@ -18,6 +18,9 @@ void run(){
             multirotor_training::operations::step(ts);
         }
 
+        for (auto& [key, value] : ts.device.logger.topic_frequency_dict){
+            std::cout << key << ": " << value << std::endl;
+        }
         multirotor_training::operations::destroy(ts);
     }
 }

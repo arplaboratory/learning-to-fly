@@ -1,13 +1,10 @@
-#include "../../../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_REWARD_FUNCTIONS_ABS_EXP_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_REWARD_FUNCTIONS_ABS_EXP_H
+#ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_ABS_EXP_H
+#define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_ABS_EXP_H
 
 #include "../../multirotor.h"
-#include "../../../../../utils/generic/typing.h"
-#include "../../../../../utils/generic/vector_operations.h"
+#include <backprop_tools/utils/generic/typing.h>
+#include <backprop_tools/utils/generic/vector_operations.h>
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::environments::multirotor::parameters::reward_functions{
     template<typename T>
     struct AbsExp{
@@ -57,7 +54,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         T action_cost = utils::vector_operations::norm<DEVICE, T, ACTION_DIM>(action_diff);
         T weighted_abs_cost = params.position * position_cost + params.orientation * orientation_cost + params.linear_velocity * linear_vel_cost + params.angular_velocity * angular_vel_cost + params.linear_acceleration * linear_acc_cost + params.angular_acceleration * angular_acc_cost + params.action * action_cost;
         T r = math::exp(device.math, -params.scale_inner*weighted_abs_cost);
-        constexpr TI cadence = 991;
+        constexpr TI cadence = 9991;
         if(log_components){
             add_scalar(device, device.logger, "reward/orientation_cost", orientation_cost, cadence);
             add_scalar(device, device.logger, "reward/position_cost", position_cost, cadence);
@@ -112,6 +109,5 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         return acc;
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 
 #endif

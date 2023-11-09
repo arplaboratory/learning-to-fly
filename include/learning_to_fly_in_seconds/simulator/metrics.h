@@ -1,13 +1,7 @@
-#include "../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_METRICS_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_METRICS_H
-
-#include "../../../rl/utils/validation.h"
+#include <backprop_tools/rl/utils/validation.h>
 
 #include <string>
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::utils::validation{
     namespace metrics{
         template <typename T_TI, T_TI T_DISTANCE_MM>
@@ -187,6 +181,3 @@ namespace backprop_tools{
         return math::sqrt(device.math, max_pos_error_variance_sum / max_pos_error_count);
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
-
-#endif

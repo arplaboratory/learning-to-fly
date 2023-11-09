@@ -1,13 +1,13 @@
 #ifndef BACKPROP_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_H
 #define BACKPROP_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_H
 
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/abs_exp.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/squared.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/absolute.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/default.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/dynamics/crazy_flie.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/init/default.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/termination/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/abs_exp.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/squared.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/absolute.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/dynamics/crazy_flie.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/init/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/termination/default.h>
 
 #include <backprop_tools/utils/generic/typing.h>
 

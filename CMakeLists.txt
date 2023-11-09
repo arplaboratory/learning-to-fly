@@ -17,8 +17,16 @@ if(APPLE)
     set(BACKPROP_TOOLS_BACKEND_ENABLE_ACCELERATE ON)
 endif()
 
-set(BACKPROP_TOOLS_ENABLE_TESTS ON)
+add_library(learning_to_fly_in_seconds INTERFACE)
+target_include_directories(learning_to_fly_in_seconds INTERFACE include)
+
+#set(BACKPROP_TOOLS_ENABLE_TESTS ON)
 add_subdirectory(external/backprop_tools)
 add_subdirectory(src)
 
-add_subdirectory(test)
+set(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS ON)
+
+if(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS)
+    enable_testing()
+    add_subdirectory(test)
+endif()

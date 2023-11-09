@@ -12,8 +12,8 @@
 #include <filesystem>
 #include <fstream>
 #include <backprop_tools/operations/cpu_mux.h>
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
-#include <backprop_tools/rl/environments/multirotor/ui.h>
+#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
+#include <learning_to_fly_in_seconds/simulator/ui.h>
 namespace bpt = backprop_tools;
 
 //#include "../td3/parameters.h"
@@ -438,11 +438,12 @@ void http_server(tcp::acceptor& acceptor, tcp::socket& socket){
 }
 
 int main(int argc, char* argv[]) {
+    std::cout << "Note: This executable should be executed in the context (working directory) of the main repo e.g. ./build/src/rl_environments_multirotor_ui 0.0.0.0 8000" << std::endl;
     try{
         // Check command line arguments.
         if(argc != 3)
         {
-            std::cerr << "Usage: " << argv[0] << " <address> <port>\n";
+            std::cerr << "Usage: " << argv[0] << " <address> <port> (e.g. \'0.0.0.0 8000\' for localhost 8000)\n";
             return EXIT_FAILURE;
         }
 

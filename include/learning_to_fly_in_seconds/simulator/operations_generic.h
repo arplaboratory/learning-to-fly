@@ -1,22 +1,19 @@
-#include "../../../version.h"
-#if (defined(BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS) || !defined(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_OPERATIONS_GENERIC_H)) && (BACKPROP_TOOLS_USE_THIS_VERSION == 1)
-#pragma once
-#define BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_OPERATIONS_GENERIC_H
+#ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_OPERATIONS_GENERIC_H
+#define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_OPERATIONS_GENERIC_H
 
 #include "multirotor.h"
 
-#include "../../../utils/generic/vector_operations.h"
+#include <backprop_tools/utils/generic/vector_operations.h>
 #include "quaternion_helper.h"
 
-#include "../../../utils/generic/typing.h"
+#include <backprop_tools/utils/generic/typing.h>
 
-#include "../../../rl/environments/operations_generic.h"
+#include <backprop_tools/rl/environments/operations_generic.h>
 
 #ifndef BACKPROP_TOOLS_FUNCTION_PLACEMENT
 #define BACKPROP_TOOLS_FUNCTION_PLACEMENT
 #endif
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools{
     // State arithmetic for RK4 integration
     // scalar multiply
@@ -116,12 +113,10 @@ namespace backprop_tools{
         add_accumulate(device, static_cast<const typename STATE::NEXT_COMPONENT&>(s), static_cast<const typename STATE::NEXT_COMPONENT&>(out), static_cast<typename STATE::NEXT_COMPONENT&>(out));
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 
-#include "../../../utils/generic/integrators.h"
+#include <backprop_tools/utils/generic/integrators.h>
 
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools::rl::environments::multirotor {
     template<typename DEVICE, typename T, typename TI, typename PARAMETERS>
     BACKPROP_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateBase<T, TI>& state, const T* action, StateBase<T, TI>& state_change) {
@@ -710,18 +705,13 @@ namespace backprop_tools{
         return false;
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 #include "parameters/reward_functions/reward_functions.h"
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
 namespace backprop_tools{
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
     BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         return rl::environments::multirotor::parameters::reward_functions::reward(device, env, env.parameters.mdp.reward, state, action, next_state, rng);
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
-
-#endif
 
 //template<typename DEVICE, typename T, typename TI, typename SPEC, typename LATENT_STATE>
 //static void deserialize(DEVICE& device, typename rl::environments::multirotor::StateBase<T, TI, LATENT_STATE>& state, Matrix<SPEC>& flat_state){
@@ -800,3 +790,5 @@ BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
 //        state.rpm_history[step_i][3] = get(flat_state, 0, offset + step_i * 4 + 3);
 //    }
 //}
+
+#endif
