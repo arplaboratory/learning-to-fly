@@ -1,4 +1,5 @@
 FROM ubuntu:20.04
+EXPOSE 80
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y wget gnupg
 RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
@@ -8,7 +9,19 @@ RUN apt-get update && apt-get install -y intel-oneapi-mkl-devel-2023.1.0
 RUN apt-get update && apt-get install -y cmake build-essential git libhdf5-dev libboost-all-dev protobuf-compiler libprotobuf-dev python3 python3-pip
 RUN pip3 install --upgrade pip
 RUN pip3 install tensorboard==2.12.2
-RUN git clone https://github.com/arplaboratory/learning_to_fly_in_seconds
+RUN mkdir $HOME/.ssh && ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+RUN --mount=type=ssh git clone git@github.com:arplaboratory/learning_to_fly.git
+WORKDIR /learning_to_fly
+RUN --mount=type=ssh git submodule update --init -- external/backprop_tools
+WORKDIR external/backprop_tools
+RUN --mount=type=ssh git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
+WORKDIR /learning_to_fly
+RUN --mount=type=ssh git pull && echo bump_0
+WORKDIR /
 RUN mkdir build
 WORKDIR /build
-RUN cmake ../learning_to_fly_in_seconds -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON
+RUN cmake ../learning_to_fly -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON
+RUN cmake --build . -j$(nproc)
+WORKDIR /learning_to_fly
+RUN --mount=type=ssh git pull
+CMD ["/build/src/ui", "0.0.0.0", "80"]
