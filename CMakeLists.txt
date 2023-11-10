@@ -23,7 +23,7 @@ target_include_directories(learning_to_fly_in_seconds INTERFACE include)
 add_subdirectory(external/backprop_tools)
 add_subdirectory(src)
 
-set(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS ON)
+set(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS OFF)
 
 if(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS)
     enable_testing()

@@ -9,7 +9,8 @@ set(CMAKE_CUDA_ARCHITECTURES "native")
 add_executable(rl_environments_multirotor_cuda_benchmark benchmark.cu)
 
 target_link_libraries(rl_environments_multirotor_cuda_benchmark
-        backprop_tools
+        backprop_tools::minimal
+        backprop_tools::optimizations_cuda
         learning_to_fly_in_seconds
 )
 BACKPROP_TOOLS_TAG_IS_CUDA(rl_environments_multirotor_cuda_benchmark)

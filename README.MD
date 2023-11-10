@@ -14,6 +14,7 @@
 This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
 
 ### Instructions to run the code
+Note: If you would like to run it inside a Docker container see the [Docker](#docker) section below.
 Clone this repository:
 ```
 git clone https://github.com/arplaboratory/learning_to_fly_in_seconds
@@ -49,16 +50,39 @@ cd ../../
 mkdir build
 cd build
 ```
-- Ubuntu + OpenBLAS: `cmake .. -DBACKPROP_TOOLS_BACKEND_ENABLE_OPENBLAS:BOOL=ON`
-- Ubuntu + MKL: `cmake .. -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
-- macOS (tested on Sonoma): `cmake ..`
+- Ubuntu + OpenBLAS: `cmake .. -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_OPENBLAS:BOOL=ON`
+- Ubuntu + MKL: `cmake .. -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
+- macOS (tested on Sonoma): `cmake .. -DCMAKE_BUILD_TYPE=Release`
 
-Finally we can build the targets:
+Finally, we can build the targets:
 ```
 cmake --build . -j8
 ```
 
-After successfully building the targets, we can run the code:
+After successfully building the targets, we can run the code (in the original directory `learning_to_fly_in_seconds`):
+```
+cd ..
+./build/src/rl_environments_multirotor_training_headless 
+```
+While this is running, you should be able to see training metrics using Tensorboard
+
+If not already installed:
+```
+python3 -m pip install tensorboard
+```
+Then from the original directory `learning_to_fly_in_seconds`:
+```
+tensorboard --logdir=logs
 ```
 
+
+
+### Docker
+
+```
+docker build -t learning_to_fly_in_seconds .
+```
+
+```
+docker run -it --rm 8000:8000 learning_to_fly_in_seconds
 ```
