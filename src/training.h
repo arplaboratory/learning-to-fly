@@ -178,20 +178,12 @@ namespace multirotor_training{
             static constexpr TI REPLAY_BUFFER_CAP = STEP_LIMIT;
             static constexpr TI ENVIRONMENT_STEP_LIMIT = 500;
             static constexpr TI BASE_SEED = 0;
-            static constexpr bool CONSTRUCT_LOGGER = true;
+            static constexpr bool CONSTRUCT_LOGGER = false;
             using OFF_POLICY_RUNNER_SPEC = bpt::rl::components::off_policy_runner::Specification<T, TI, ENVIRONMENT, N_ENVIRONMENTS, ASYMMETRIC_OBSERVATIONS, REPLAY_BUFFER_CAP, ENVIRONMENT_STEP_LIMIT, bpt::rl::components::off_policy_runner::DefaultParameters<T>, false, true, 1000>;
             using OFF_POLICY_RUNNER_TYPE = bpt::rl::components::OffPolicyRunner<OFF_POLICY_RUNNER_SPEC>;
             static constexpr bpt::rl::components::off_policy_runner::DefaultParameters<T> off_policy_runner_parameters = {
                     0.1
             };
-            // good policy stats:
-            // angular_acc error < 60
-            // action cost < 0.7
-            // angular_velocity < 4
-            // linear acceleration < 4
-            // orientation < 0.08
-            // position < 0.25
-            // linear_velocity < 0.75
 
             static constexpr TI N_WARMUP_STEPS_CRITIC = 15000;
             static constexpr TI N_WARMUP_STEPS_ACTOR = 30000;
@@ -392,49 +384,12 @@ namespace multirotor_training{
             using TI = typename CONFIG::TI;
             if constexpr(CONFIG::ABLATION_SPEC::ENABLE_CURRICULUM == true) {
                 if(ts.step != 0 && ts.step % 100000 == 0 && ts.step != (CONFIG::STEP_LIMIT - 1)){
-//                constexpr T decay = 0.96;
-//                constexpr T decay = 0.75;
-//                off_policy_runner.parameters.exploration_noise *= decay;
-//                actor_critic.target_next_action_noise_std *= decay;
-//                actor_critic.target_next_action_noise_clip *= decay;
-//                off_policy_runner.parameters.exploration_noise = off_policy_runner.parameters.exploration_noise < 0.2 ? 0.2 : off_policy_runner.parameters.exploration_noise;
-//                actor_critic.target_next_action_noise_std = actor_critic.target_next_action_noise_std < 0.05 ? 0.05 : actor_critic.target_next_action_noise_std;
-//                actor_critic.target_next_action_noise_clip = actor_critic.target_next_action_noise_clip < 0.15 ? 0.15 : actor_critic.target_next_action_noise_clip;
-//                constexpr T noise_decay_base = 0.95;
-//                ts.off_policy_runner.parameters.exploration_noise *= noise_decay_base;
-//                ts.actor_critic.target_next_action_noise_std *= noise_decay_base;
-//                ts.actor_critic.target_next_action_noise_clip *= noise_decay_base;
-//                if constexpr(CONFIG::ABLATION_SPEC::ENABLE_CURRICULUM == true){
-//                    T gamma = ts.actor_critic.gamma;
-//                    gamma += 0.001;
-//                    T gamma_limit = 0.997;
-//                    gamma = gamma > gamma_limit ? gamma_limit : gamma;
-//                    ts.actor_critic.gamma = gamma;
-//                }
-//                if (CONFIG::ABLATION_SPEC::ENABLE_CURRICULUM == true && ts.step == 300000){
-//                    for (auto& env : ts.off_policy_runner.envs) {
-//                        env.parameters.mdp.init = backprop_tools::rl::environments::multirotor::parameters::init::all_around_2<T, TI, 4, CONFIG::ENVIRONMENT::PARAMETERS::MDP::REWARD_FUNCTION>;
-//                    }
-//                }
                     bpt::add_scalar(ts.device, ts.device.logger, "td3/gamma", ts.actor_critic.gamma);
                     bpt::add_scalar(ts.device, ts.device.logger, "td3/target_next_action_noise_std", ts.actor_critic.target_next_action_noise_std);
                     bpt::add_scalar(ts.device, ts.device.logger, "td3/target_next_action_noise_clip", ts.actor_critic.target_next_action_noise_clip);
                     bpt::add_scalar(ts.device, ts.device.logger, "off_policy_runner/exploration_noise", ts.off_policy_runner.parameters.exploration_noise);
 
 
-                    // sq exp
-//                {
-//                    for (auto& env : off_policy_runner.envs) {
-//                        T action_weight = env.parameters.mdp.reward.angular_acceleration;
-//                        action_weight *= 1.2;
-//                        T action_weight_limit = 0.1 / 250.0 * 2;
-//                        action_weight = action_weight > action_weight_limit ? action_weight_limit : action_weight;
-//                        env.parameters.mdp.reward.angular_acceleration = action_weight;
-//                    }
-//                    bpt::add_scalar(device, device.logger, "reward_function/action_weight", off_policy_runner.envs[0].parameters.mdp.reward.action);
-//                    bpt::add_scalar(device, device.logger, "reward_function/angular_acceleration_weight", off_policy_runner.envs[0].parameters.mdp.reward.angular_acceleration);
-//                }
-//                sq
                     for(auto& env : ts.off_policy_runner.envs){
                         {
                             T action_weight = env.parameters.mdp.reward.action;
@@ -512,188 +467,6 @@ namespace multirotor_training{
             }
         }
         template <typename CONFIG>
-        void step_network_stats(TrainingState<CONFIG>& ts){
-            using T = typename CONFIG::T;
-            using TI = typename CONFIG::TI;
-            if(ts.step % 100000 == 0){
-                {
-                    T rmse = bpt::math::sqrt(ts.device.math, bpt::mean_of_squares(ts.device, bpt::get_layer(ts.device, ts.actor_critic.actor, bpt::Constant<0>{}).weights.parameters));
-                    bpt::add_scalar(ts.device, ts.device.logger, std::string("td3/actor/layer_0/weights_rmse"), rmse);
-                }
-                {
-                    T rmse = bpt::math::sqrt(ts.device.math, bpt::mean_of_squares(ts.device, bpt::get_layer(ts.device, ts.actor_critic.actor, bpt::Constant<1>{}).weights.parameters));
-                    bpt::add_scalar(ts.device, ts.device.logger, std::string("td3/actor/layer_1/weights_rmse"), rmse);
-                }
-                {
-                    T rmse = bpt::math::sqrt(ts.device.math, bpt::mean_of_squares(ts.device, bpt::get_layer(ts.device, ts.actor_critic.actor, bpt::Constant<2>{}).weights.parameters));
-                    bpt::add_scalar(ts.device, ts.device.logger, std::string("td3/actor/layer_2/weights_rmse"), rmse);
-                }
-            }
-        }
-        template <typename CONFIG>
-        void step_network_analysis(TrainingState<CONFIG>& ts){
-            using T = typename CONFIG::T;
-            using TI = typename CONFIG::TI;
-            if(ts.step % 100000 == 0){
-                {
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 100, 100>> image;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, CONFIG::ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED + CONFIG::ENVIRONMENT::ACTION_DIM>> critic_input;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, 1>> critic_output;
-                    typename CONFIG::CRITIC_TYPE::template DoubleBuffer<1> critic_buffer;
-                    bpt::malloc(ts.device, image);
-                    bpt::malloc(ts.device, critic_input);
-                    bpt::malloc(ts.device, critic_output);
-                    bpt::malloc(ts.device, critic_buffer);
-                    auto observation = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED>{});
-                    auto action = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT::ACTION_DIM>{}, 0, CONFIG::ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED);
-                    bpt::set_all(ts.device, action, 0);
-                    typename CONFIG::ENVIRONMENT::State state;
-                    bpt::observe_privileged(ts.device, ts.env_eval, state, observation, ts.rng_eval);
-                    bpt::initial_state(ts.device, ts.envs[0], state);
-                    for(TI action_0 = 0; action_0 < decltype(image)::COLS; action_0++){
-                        for(TI action_1 = 0; action_1 < decltype(image)::ROWS; action_1++){
-                            T action_0_value = -1.0 + 2.0 / (decltype(image)::COLS - 1) * action_0;
-                            T action_1_value = -1.0 + 2.0 / (decltype(image)::ROWS - 1) * action_1;
-                            bpt::set(action, 0, 0, action_0_value);
-                            bpt::set(action, 0, 1, action_1_value);
-                            bpt::evaluate(ts.device, ts.actor_critic.critic_1, critic_input, critic_output, critic_buffer);
-                            bpt::set(image, action_0, action_1, bpt::get(critic_output, 0, 0));
-                        }
-                    }
-                    bpt::normalize(ts.device, image);
-                    bpt::multiply_all(ts.device, image, 1/3.0);
-                    bpt::add_image(ts.device, ts.device.logger, std::string("td3/action_value_0_1"), image);
-                    bpt::free(ts.device, image);
-                    bpt::free(ts.device, critic_input);
-                    bpt::free(ts.device, critic_output);
-                    bpt::free(ts.device, critic_buffer);
-                }
-                {
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 100, 100>> image;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, CONFIG::ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED + CONFIG::ENVIRONMENT::ACTION_DIM>> critic_input;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, 1>> critic_output;
-                    typename CONFIG::CRITIC_TYPE::template DoubleBuffer<1> critic_buffer;
-                    bpt::malloc(ts.device, image);
-                    bpt::malloc(ts.device, critic_input);
-                    bpt::malloc(ts.device, critic_output);
-                    bpt::malloc(ts.device, critic_buffer);
-                    auto observation = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM_PRIVILEGED>{});
-                    auto action = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT_EVALUATION::ACTION_DIM>{}, 0, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM_PRIVILEGED);
-                    bpt::set_all(ts.device, action, 0);
-                    typename CONFIG::ENVIRONMENT_EVALUATION::State state;
-                    bpt::initial_state(ts.device, ts.envs[0], state);
-                    for(TI x_i = 0; x_i < decltype(image)::COLS; x_i++){
-                        for(TI y_i = 0; y_i < decltype(image)::ROWS; y_i++){
-                            T x = -1.0 + 2.0 / (decltype(image)::COLS - 1) * x_i;
-                            T y = -1.0 + 2.0 / (decltype(image)::ROWS - 1) * y_i;
-                            state.position[0] = x;
-                            state.position[1] = y;
-                            bpt::observe_privileged(ts.device, ts.env_eval, state, observation, ts.rng_eval);
-                            bpt::evaluate(ts.device, ts.actor_critic.critic_1, critic_input, critic_output, critic_buffer);
-                            bpt::set(image, x_i, y_i, bpt::get(critic_output, 0, 0));
-                        }
-                    }
-                    bpt::normalize(ts.device, image);
-                    bpt::multiply_all(ts.device, image, 1/3.0);
-                    bpt::add_image(ts.device, ts.device.logger, std::string("td3/position_value"), image);
-                    bpt::free(ts.device, image);
-                    bpt::free(ts.device, critic_input);
-                    bpt::free(ts.device, critic_output);
-                    bpt::free(ts.device, critic_buffer);
-                }
-                {
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 100, 100>> image;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM_PRIVILEGED + CONFIG::ENVIRONMENT_EVALUATION::ACTION_DIM>> critic_input;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, 1>> critic_output;
-                    typename CONFIG::CRITIC_TYPE::template DoubleBuffer<1> critic_buffer;
-                    bpt::malloc(ts.device, image);
-                    bpt::malloc(ts.device, critic_input);
-                    bpt::malloc(ts.device, critic_output);
-                    bpt::malloc(ts.device, critic_buffer);
-                    auto observation = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM_PRIVILEGED>{});
-                    auto action = bpt::view(ts.device, critic_input, bpt::matrix::ViewSpec<1, CONFIG::ENVIRONMENT_EVALUATION::ACTION_DIM>{}, 0, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM_PRIVILEGED);
-                    bpt::set_all(ts.device, action, 0);
-                    typename CONFIG::ENVIRONMENT_EVALUATION::State state;
-                    bpt::initial_state(ts.device, ts.envs[0], state);
-                    for(TI x_i = 0; x_i < decltype(image)::COLS; x_i++){
-                        for(TI y_i = 0; y_i < decltype(image)::ROWS; y_i++){
-                            T x = -1.0 + 2.0 / (decltype(image)::COLS - 1) * x_i;
-                            T y = -1.0 + 2.0 / (decltype(image)::ROWS - 1) * y_i;
-                            state.linear_velocity[0] = x;
-                            state.linear_velocity[1] = y;
-                            bpt::observe_privileged(ts.device, ts.env_eval, state, observation, ts.rng_eval);
-                            bpt::evaluate(ts.device, ts.actor_critic.critic_1, critic_input, critic_output, critic_buffer);
-                            bpt::set(image, x_i, y_i, bpt::get(critic_output, 0, 0));
-                        }
-                    }
-                    bpt::normalize(ts.device, image);
-                    bpt::multiply_all(ts.device, image, 1/3.0);
-                    bpt::add_image(ts.device, ts.device.logger, std::string("td3/velocity_value"), image);
-                    bpt::free(ts.device, image);
-                    bpt::free(ts.device, critic_input);
-                    bpt::free(ts.device, critic_output);
-                    bpt::free(ts.device, critic_buffer);
-                }
-                {
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 100, 100>> image_0, image_1, image_2, image_3;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, CONFIG::ENVIRONMENT_EVALUATION::OBSERVATION_DIM>> actor_input;
-                    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, CONFIG::ENVIRONMENT_EVALUATION::ACTION_DIM>> action;
-                    typename CONFIG::ACTOR_TYPE::template DoubleBuffer<1> actor_buffer;
-                    bpt::malloc(ts.device, image_0);
-                    bpt::malloc(ts.device, image_1);
-                    bpt::malloc(ts.device, image_2);
-                    bpt::malloc(ts.device, image_3);
-                    bpt::malloc(ts.device, actor_input);
-                    bpt::malloc(ts.device, action);
-                    bpt::malloc(ts.device, actor_buffer);
-                    bpt::set_all(ts.device, action, 0);
-                    typename CONFIG::ENVIRONMENT_EVALUATION::State state;
-                    bpt::initial_state(ts.device, ts.envs[0], state);
-                    for(TI x_i = 0; x_i < decltype(image_0)::COLS; x_i++){
-                        for(TI y_i = 0; y_i < decltype(image_0)::ROWS; y_i++){
-                            T x = -1.0 + 2.0 / (decltype(image_0)::COLS - 1) * x_i;
-                            T y = -1.0 + 2.0 / (decltype(image_0)::ROWS - 1) * y_i;
-                            state.position[0] = x;
-                            state.position[1] = y;
-                            bpt::observe(ts.device, ts.env_eval, state, actor_input, ts.rng_eval);
-                            bpt::evaluate(ts.device, ts.actor_critic.actor, actor_input, action, actor_buffer);
-                            bpt::set(image_0, x_i, y_i, bpt::get(action, 0, 0));
-                            bpt::set(image_1, x_i, y_i, bpt::get(action, 0, 1));
-                            bpt::set(image_2, x_i, y_i, bpt::get(action, 0, 2));
-                            bpt::set(image_3, x_i, y_i, bpt::get(action, 0, 3));
-                        }
-                    }
-                    {
-                        bpt::normalize(ts.device, image_0);
-                        bpt::multiply_all(ts.device, image_0, 1/3.0);
-                        bpt::add_image(ts.device, ts.device.logger, std::string("td3/position_action_0"), image_0);
-                    }
-                    {
-                        bpt::normalize(ts.device, image_1);
-                        bpt::multiply_all(ts.device, image_1, 1/3.0);
-                        bpt::add_image(ts.device, ts.device.logger, std::string("td3/position_action_1"), image_1);
-                    }
-                    {
-                        bpt::normalize(ts.device, image_2);
-                        bpt::multiply_all(ts.device, image_2, 1/3.0);
-                        bpt::add_image(ts.device, ts.device.logger, std::string("td3/position_action_2"), image_2);
-                    }
-                    {
-                        bpt::normalize(ts.device, image_3);
-                        bpt::multiply_all(ts.device, image_3, 1/3.0);
-                        bpt::add_image(ts.device, ts.device.logger, std::string("td3/position_action_3"), image_3);
-                    }
-                    bpt::free(ts.device, image_0);
-                    bpt::free(ts.device, image_1);
-                    bpt::free(ts.device, image_2);
-                    bpt::free(ts.device, image_3);
-                    bpt::free(ts.device, actor_input);
-                    bpt::free(ts.device, action);
-                    bpt::free(ts.device, actor_buffer);
-                }
-            }
-        }
-        template <typename CONFIG>
         void step_validation(TrainingState<CONFIG>& ts){
             if(ts.step % 50000 == 0){
                 bpt::reset(ts.device, ts.task, ts.rng_eval);
@@ -728,9 +501,6 @@ namespace multirotor_training{
             step_curriculum(ts);
             bpt::rl::algorithms::td3::loop::step(ts);
             step_trajectory_collection(ts);
-//            step_critic_reset(ts);
-            step_network_stats(ts);
-//            step_network_analysis(ts);
         }
         template <typename CONFIG>
         void destroy(TrainingState<CONFIG>& ts){
