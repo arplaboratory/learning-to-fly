@@ -4,6 +4,9 @@
 <img src="https://github.com/arplaboratory/learning_to_fly_in_seconds_media/blob/master/training_simulation.gif" alt="animated" height='300'/>
 </div>
 <div align="center">
+    Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">BackpropTools</span> then transfered to a real Crazyflie:
+</div>
+<div align="center">
 <img src="https://github.com/arplaboratory/learning_to_fly_in_seconds_media/blob/master/trajectory_tracking_long_exposure.gif" alt="animated" height='200'/>
 </div>
 
