@@ -1,6 +1,6 @@
 [submodule "external/backprop_tools"]
 	path = external/backprop_tools
-	url = ../BackpropTools/multirotor
+	url = ../../BackpropTools/multirotor
 [submodule "test/lib/googletest"]
 	path = test/lib/googletest
 	url = https://github.com/google/googletest.git
