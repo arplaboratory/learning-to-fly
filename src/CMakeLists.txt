@@ -2,9 +2,9 @@
 if(BACKPROP_TOOLS_ENABLE_JSON AND BACKPROP_TOOLS_ENABLE_BOOST_BEAST)
 find_package(Boost REQUIRED)
 message(STATUS "Boost version: ${Boost_VERSION}")
-add_executable(rl_environments_multirotor_ui ui/ui.cpp)
+add_executable(ui ui/ui.cpp)
 target_link_libraries(
-        rl_environments_multirotor_ui
+        ui
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds
@@ -12,25 +12,25 @@ target_link_libraries(
 )
 endif()
 
-add_executable(rl_environments_multirotor_training_headless training.cpp)
+add_executable(training_headless training.cpp)
 target_link_libraries(
-        rl_environments_multirotor_training_headless
+        training_headless
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds
 )
-add_executable(rl_environments_multirotor_training_benchmark training.cpp)
+add_executable(training_benchmark training.cpp)
 target_link_libraries(
-        rl_environments_multirotor_training_benchmark
+        training_benchmark
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds
 )
 target_compile_definitions(rl_environments_multirotor_training_benchmark PRIVATE LEARNING_TO_FLY_IN_SECONDS_BENCHMARK)
 
-add_executable(rl_environments_multirotor_ablation_study ablation_study.cpp)
+add_executable(ablation_study ablation_study.cpp)
 target_link_libraries(
-        rl_environments_multirotor_ablation_study
+        ablation_study
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds
