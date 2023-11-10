@@ -38,7 +38,7 @@ sudo apt update && sudo apt install libhdf5-dev libopenblas-dev protobuf-compile
 As an alternative to openblas you can also install [Intel MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) which in our experience is faster than OpenBLAS.
 #### Install dependencies on macOS
 ```
-brew install hdf5 protobuf-compiler protobuf boost
+brew install hdf5 protobuf boost
 ```
 
 
