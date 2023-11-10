@@ -12,11 +12,11 @@ constexpr auto ACTION_DIM = dynamics_legacy::ACTION_DIM;
 
 #include <backprop_tools/operations/cpu.h>
 
-#include <backprop_tools/rl/environments/multirotor/parameters/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/default.h>
 
-#include <backprop_tools/rl/environments/multirotor/multirotor.h>
+#include <learning_to_fly_in_seconds/simulator/multirotor.h>
 
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
+#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
 
 #include <backprop_tools/utils/generic/memcpy.h>
 

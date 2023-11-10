@@ -12,17 +12,17 @@ target_link_libraries(
 )
 endif()
 
-add_executable(rl_environments_multirotor_ui_training training.cpp)
+add_executable(rl_environments_multirotor_training_headless training.cpp)
 target_link_libraries(
-        rl_environments_multirotor_ui_training
+        rl_environments_multirotor_training_headless
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds
 )
 
-add_executable(rl_environments_multirotor_ui_ablation_study ablation_study.cpp)
+add_executable(rl_environments_multirotor_ablation_study ablation_study.cpp)
 target_link_libraries(
-        rl_environments_multirotor_ui_ablation_study
+        rl_environments_multirotor_ablation_study
         PRIVATE
         backprop_tools
         learning_to_fly_in_seconds

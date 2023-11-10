@@ -18,6 +18,7 @@ target_link_libraries(
         test_rl_environments_multirotor_multirotor
         backprop_tools
         backprop_tools_tests
+        learning_to_fly_in_seconds
 )
 gtest_discover_tests(test_rl_environments_multirotor_multirotor)
 
@@ -33,6 +34,7 @@ if(${BACKPROP_TOOLS_TESTS_RL_ENVIRONMENTS_MULTIROTOR_UI_ENABLE})
             test_rl_environments_multirotor_ui_test
             backprop_tools
             backprop_tools_tests
+            learning_to_fly_in_seconds
     )
     target_include_directories(
             test_rl_environments_multirotor_ui_test
