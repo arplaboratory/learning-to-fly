@@ -1,13 +1,13 @@
 # Learning to Fly in Seconds
 
 <div align="center">
-<img src="https://github.com/arplaboratory/learning_to_fly_in_seconds_media/blob/master/training_simulation.gif" alt="animated" height='300'/>
+<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/training_simulation.gif" alt="animated" height='300'/>
 </div>
 <div align="center">
     Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">BackpropTools</span> then transfered to a real Crazyflie:
 </div>
 <div align="center">
-<img src="https://github.com/arplaboratory/learning_to_fly_in_seconds_media/blob/master/trajectory_tracking_long_exposure.gif" alt="animated" height='200'/>
+<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/trajectory_tracking_long_exposure.gif" alt="animated" height='200'/>
 </div>
 
 ### Introduction
@@ -17,8 +17,8 @@ This repository contains the code for the paper "Learning to Fly in Seconds". Th
 Note: If you would like to run it inside a Docker container see the [Docker](#docker) section below.
 Clone this repository:
 ```
-git clone https://github.com/arplaboratory/learning_to_fly_in_seconds
-cd learning_to_fly_in_seconds
+git clone https://github.com/arplaboratory/learning_to_fly
+cd learning_to_fly
 ```
 Then instantiate the `BackpropTools` submodule:
 ```
@@ -44,7 +44,7 @@ brew install hdf5 protobuf-compiler protobuf boost
 
 
 
-Going back to the main directory (`learning_to_fly_in_seconds`), we can now configure the build of the code:
+Going back to the main directory (`learning_to_fly`), we can now configure the build of the code:
 ```
 cd ../../
 mkdir build
@@ -59,7 +59,7 @@ Finally, we can build the targets:
 cmake --build . -j8
 ```
 
-After successfully building the targets, we can run the code (in the original directory `learning_to_fly_in_seconds`):
+After successfully building the targets, we can run the code (in the original directory `learning_to_fly`):
 ```
 cd ..
 ./build/src/rl_environments_multirotor_training_headless 
@@ -70,7 +70,7 @@ If not already installed:
 ```
 python3 -m pip install tensorboard
 ```
-Then from the original directory `learning_to_fly_in_seconds`:
+Then from the original directory `learning_to_fly`:
 ```
 tensorboard --logdir=logs
 ```
@@ -80,9 +80,9 @@ tensorboard --logdir=logs
 ### Docker
 
 ```
-docker build -t learning_to_fly_in_seconds .
+docker build -t learning_to_fly .
 ```
 
 ```
-docker run -it --rm 8000:8000 learning_to_fly_in_seconds
+docker run -it --rm 8000:8000 learning_to_fly
 ```
