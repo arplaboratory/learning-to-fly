@@ -19,6 +19,14 @@ target_link_libraries(
         backprop_tools
         learning_to_fly_in_seconds
 )
+add_executable(rl_environments_multirotor_training_benchmark training.cpp)
+target_link_libraries(
+        rl_environments_multirotor_training_benchmark
+        PRIVATE
+        backprop_tools
+        learning_to_fly_in_seconds
+)
+target_compile_definitions(rl_environments_multirotor_training_benchmark PRIVATE LEARNING_TO_FLY_IN_SECONDS_BENCHMARK)
 
 add_executable(rl_environments_multirotor_ablation_study ablation_study.cpp)
 target_link_libraries(

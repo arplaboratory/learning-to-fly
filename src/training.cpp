@@ -1,6 +1,8 @@
 
 #include "training.h"
 
+#include <chrono>
+
 
 template <typename T_ABLATION_SPEC>
 void run(){
@@ -9,8 +11,15 @@ void run(){
     using CONFIG = multirotor_training::config::Config<T_ABLATION_SPEC>;
     using TI = typename CONFIG::TI;
 
-    for (TI run_i = 0; run_i < 10; run_i++){
+#ifdef LEARNING_TO_FLY_IN_SECONDS_BENCHMARK
+    constexpr TI NUM_RUNS = 1;
+#else
+    constexpr TI NUM_RUNS = 10;
+#endif
+
+    for (TI run_i = 0; run_i < NUM_RUNS; run_i++){
         std::cout << "Run " << run_i << "\n";
+        auto start = std::chrono::high_resolution_clock::now();
         multirotor_training::operations::TrainingState<CONFIG> ts;
         multirotor_training::operations::init(ts, run_i);
 
@@ -18,10 +27,10 @@ void run(){
             multirotor_training::operations::step(ts);
         }
 
-        for (auto& [key, value] : ts.device.logger.topic_frequency_dict){
-            std::cout << key << ": " << value << std::endl;
-        }
         multirotor_training::operations::destroy(ts);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        std::cout << "Training took: " << std::chrono::duration_cast<std::chrono::duration<double>>(end - start).count() << "s" << std::endl;
     }
 }
 

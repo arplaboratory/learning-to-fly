@@ -60,7 +60,11 @@ namespace multirotor_training{
         };
         template <typename T_ABLATION_SPEC>
         struct CoreConfig{
+#ifdef LEARNING_TO_FLY_IN_SECONDS_BENCHMARK
+            static constexpr bool BENCHMARK = true;
+#else
             static constexpr bool BENCHMARK = false;
+#endif
             using ABLATION_SPEC = T_ABLATION_SPEC;
             using LOGGER = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::logging::CPU , bpt::devices::logging::CPU_TENSORBOARD<bpt::devices::logging::CPU_TENSORBOARD_FREQUENCY_EXTENSION>>;
             using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, LOGGER>;
@@ -420,7 +424,7 @@ namespace multirotor_training{
                         auto start = std::chrono::high_resolution_clock::now();
                         bpt::recalculate_rewards(ts.device, ts.off_policy_runner.replay_buffers[0], ts.off_policy_runner.envs[0], ts.rng_eval);
                         auto end = std::chrono::high_resolution_clock::now();
-                        std::cout << "recalculate_rewards: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
+//                        std::cout << "recalculate_rewards: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
                     }
                 }
             }
