@@ -1,8 +1,8 @@
-#include <backprop_tools/rl/utils/validation.h>
+#include <rl_tools/rl/utils/validation.h>
 
 #include <string>
 
-namespace backprop_tools::rl::utils::validation{
+namespace rl_tools::rl::utils::validation{
     namespace metrics{
         template <typename T_TI, T_TI T_DISTANCE_MM>
         struct SettlingFractionPosition: Metric{
@@ -32,7 +32,7 @@ namespace backprop_tools::rl::utils::validation{
         };
     };
 }
-namespace backprop_tools{
+namespace rl_tools{
     template <typename T_TI, T_TI T_DISTANCE_MM>
     auto constexpr name(rl::utils::validation::metrics::SettlingFractionPosition<T_TI, T_DISTANCE_MM>){
         return std::string("SettlingFractionPosition(") + std::to_string(T_DISTANCE_MM) + std::string("mm)");

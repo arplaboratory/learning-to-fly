@@ -1,12 +1,12 @@
-#include <backprop_tools/operations/cpu.h>
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
+#include <rl_tools/operations/cpu.h>
+#include <rl_tools/rl/environments/multirotor/operations_cpu.h>
 #include "parameters_old.h"
-#define BACKPROP_TOOLS_NAMESPACE_WRAPPER backprop_tools_new
-#define BACKPROP_TOOLS_DISABLE_INCLUDE_GUARDS
-#include <backprop_tools_new/operations/cpu.h>
-#include <backprop_tools_new/rl/environments/multirotor/operations_cpu.h>
-namespace bpt_old = backprop_tools;
-namespace bpt_new = backprop_tools_new::backprop_tools;
+#define RL_TOOLS_NAMESPACE_WRAPPER rl_tools_new
+#define RL_TOOLS_DISABLE_INCLUDE_GUARDS
+#include <rl_tools_new/operations/cpu.h>
+#include <rl_tools_new/rl/environments/multirotor/operations_cpu.h>
+namespace bpt_old = rl_tools;
+namespace bpt_new = rl_tools_new::rl_tools;
 #include "parameters_new.h"
 
 using DEVICE_OLD = bpt_old::devices::DefaultCPU;
@@ -17,7 +17,7 @@ using ENVIRONMENT_NEW = typename parameters_sim2real::environment<T, TI>::ENVIRO
 using ENVIRONMENT_OLD = typename parameters_sim2real_old::environment<T, TI>::ENVIRONMENT;
 
 #include <gtest/gtest.h>
-TEST(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR, REGRESSION_TEST){
+TEST(RL_TOOLS_RL_ENVIRONMENTS_MULTIROTOR, REGRESSION_TEST){
     DEVICE_OLD device_old;
     DEVICE_NEW device_new;
 

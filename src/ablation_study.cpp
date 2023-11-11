@@ -68,7 +68,7 @@ struct AblationSpecTemplate: AblationSpecBase<TI> {
 };
 
 int main(int argc, char** argv){
-    std::cout << "Running the ablation study using BackpropTools: " BACKPROP_TOOLS_STRINGIFY(BACKPROP_TOOLS_COMMIT_HASH) << std::endl;
+    std::cout << "Running the ablation study using RLtools: " RL_TOOLS_STRINGIFY(RL_TOOLS_COMMIT_HASH) << std::endl;
 
     using TI = int;
     using BASE_CONFIG = multirotor_training::config::Config<AblationSpecBase<TI>>;

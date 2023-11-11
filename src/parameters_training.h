@@ -1,18 +1,18 @@
-#ifndef BACKPROP_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_TD3_PARAMETERS_H
-#define BACKPROP_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_TD3_PARAMETERS_H
+#ifndef RL_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_TD3_PARAMETERS_H
+#define RL_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_TD3_PARAMETERS_H
 
 #include "parameters_dynamics.h"
 
 
-#include <backprop_tools/nn_models/models.h>
-#include <backprop_tools/rl/algorithms/td3/td3.h>
-#include <backprop_tools/rl/components/off_policy_runner/off_policy_runner.h>
+#include <rl_tools/nn_models/models.h>
+#include <rl_tools/rl/algorithms/td3/td3.h>
+#include <rl_tools/rl/components/off_policy_runner/off_policy_runner.h>
 
-#include <backprop_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/typing.h>
 
 
 namespace parameters{
-    namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+    namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
     template<typename T, typename TI, typename ENVIRONMENT>
     struct rl{
         struct ACTOR_CRITIC_PARAMETERS: bpt::rl::algorithms::td3::DefaultParameters<T, TI>{

@@ -1,11 +1,11 @@
 #ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_QUATERNION_HELPER_H
 #define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_QUATERNION_HELPER_H
 
-#include <backprop_tools/utils/generic/vector_operations.h>
+#include <rl_tools/utils/generic/vector_operations.h>
 
-namespace backprop_tools::rl::environments::multirotor{
+namespace rl_tools::rl::environments::multirotor{
     template <typename DEVICE, typename T>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void quaternion_derivative(const T q[4], const T omega[3], T q_dot[4]) {
+    RL_TOOLS_FUNCTION_PLACEMENT void quaternion_derivative(const T q[4], const T omega[3], T q_dot[4]) {
         // FLOPS: 3 (MAC) * 4 + 4 = 16
         q_dot[0] = -q[1]*omega[0] - q[2]*omega[1] - q[3]*omega[2];
         q_dot[1] =  q[0]*omega[0] + q[2]*omega[2] - q[3]*omega[1];
@@ -16,7 +16,7 @@ namespace backprop_tools::rl::environments::multirotor{
 
 
     template <typename DEVICE, typename T>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void rotate_vector_by_quaternion(const T q[4], const T v[3], T v_out[3]) {
+    RL_TOOLS_FUNCTION_PLACEMENT void rotate_vector_by_quaternion(const T q[4], const T v[3], T v_out[3]) {
         using namespace utils::vector_operations;
 //    v_out[0] = q[0]*(q[0]*v[0] + q[2]*v[2] - q[3]*v[1]) + q[2]*(q[1]*v[1] + q[0]*v[2] - q[2]*v[0]) - q[3]*(q[0]*v[1] + q[3]*v[0] - q[1]*v[2]) - q[1]*(-q[1]*v[0] - q[2]*v[1] - q[3]*v[2]);
 //    v_out[1] = q[0]*(q[0]*v[1] + q[3]*v[0] - q[1]*v[2]) + q[3]*(q[0]*v[0] + q[2]*v[2] - q[3]*v[1]) - q[1]*(q[1]*v[1] + q[0]*v[2] - q[2]*v[0]) - q[2]*(-q[1]*v[0] - q[2]*v[1] - q[3]*v[2]);
@@ -33,7 +33,7 @@ namespace backprop_tools::rl::environments::multirotor{
 
     // quaternion to rotation matrix
     template <typename DEVICE, typename T>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void quaternion_to_rotation_matrix(const T q[4], T R[3][3]) {
+    RL_TOOLS_FUNCTION_PLACEMENT void quaternion_to_rotation_matrix(const T q[4], T R[3][3]) {
         // w = q[0], x = q[1], y = q[2], z = q[3]
         R[0][0] = 1 - 2*q[2]*q[2] - 2*q[3]*q[3];
         R[0][1] = 2*q[1]*q[2] - 2*q[0]*q[3];

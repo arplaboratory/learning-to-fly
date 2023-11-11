@@ -2,10 +2,10 @@
 #define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_SQUARED_H
 
 #include "../../multirotor.h"
-#include <backprop_tools/utils/generic/typing.h>
-#include <backprop_tools/utils/generic/vector_operations.h>
+#include <rl_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/vector_operations.h>
 
-namespace backprop_tools::rl::environments::multirotor::parameters::reward_functions{
+namespace rl_tools::rl::environments::multirotor::parameters::reward_functions{
     template<typename T>
     struct Squared{
         bool non_negative;
@@ -34,7 +34,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         };
     };
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT typename rl::environments::multirotor::parameters::reward_functions::Squared<T>::Components reward_components(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT typename rl::environments::multirotor::parameters::reward_functions::Squared<T>::Components reward_components(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng){
         using TI = typename DEVICE::index_t;
         constexpr TI ACTION_DIM = rl::environments::Multirotor<SPEC>::ACTION_DIM;
         typename rl::environments::multirotor::parameters::reward_functions::Squared<T>::Components components;
@@ -70,7 +70,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         return components;
     }
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void log_reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void log_reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         constexpr typename SPEC::TI cadence = 1;
         auto components = reward_components(device, env, params, state, action, next_state, rng);
         add_scalar(device, device.logger, "reward/orientation_cost", components.orientation_cost, cadence);
@@ -105,7 +105,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         add_scalar(device, device.logger, "reward/reward_zero",          components.reward == 0, cadence);
     }
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Squared<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng){
         auto components = reward_components(device, env, params, state, action, next_state, rng);
         return components.reward;
     }

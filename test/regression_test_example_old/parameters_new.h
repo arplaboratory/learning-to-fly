@@ -1,9 +1,9 @@
-#include <backprop_tools_new/rl/environments/multirotor/parameters/reward_functions/abs_exp.h>
-#include <backprop_tools_new/rl/environments/multirotor/parameters/reward_functions/squared.h>
-#include <backprop_tools_new/rl/environments/multirotor/parameters/reward_functions/default.h>
-#include <backprop_tools_new/rl/environments/multirotor/parameters/dynamics/crazy_flie.h>
-#include <backprop_tools_new/rl/environments/multirotor/parameters/init/default.h>
-#include <backprop_tools_new/rl/environments/multirotor/parameters/termination/default.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/reward_functions/abs_exp.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/reward_functions/squared.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/reward_functions/default.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/dynamics/crazy_flie.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/init/default.h>
+#include <rl_tools_new/rl/environments/multirotor/parameters/termination/default.h>
 
 namespace parameters_sim2real{
     namespace builder{
@@ -84,7 +84,7 @@ namespace parameters_sim2real{
 }
 
 //namespace parameters_fast_learning{
-//    namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+//    namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 //    template<typename T, typename TI>
 //    struct environment{
 //        static constexpr auto reward_function = bpt::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold<T>;

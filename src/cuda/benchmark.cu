@@ -1,9 +1,9 @@
-#include <backprop_tools/operations/cuda.h>
+#include <rl_tools/operations/cuda.h>
 
 
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
+#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
 #include "parameters.h"
-namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include <iostream>
 #include <chrono>

@@ -1,27 +1,27 @@
-#include <backprop_tools/operations/cpu_mux.h>
-#include <backprop_tools/nn/operations_cpu_mux.h>
+#include <rl_tools/operations/cpu_mux.h>
+#include <rl_tools/nn/operations_cpu_mux.h>
 
 #include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
 #include <learning_to_fly_in_seconds/simulator/metrics.h>
 
-#include <backprop_tools/nn_models/sequential/operations_generic.h>
+#include <rl_tools/nn_models/sequential/operations_generic.h>
 
-#include <backprop_tools/rl/algorithms/td3/loop.h>
+#include <rl_tools/rl/algorithms/td3/loop.h>
 
-#include <backprop_tools/containers/persist.h>
-#include <backprop_tools/nn/parameters/persist.h>
-#include <backprop_tools/nn/layers/dense/persist.h>
-#include <backprop_tools/nn_models/sequential/persist.h>
+#include <rl_tools/containers/persist.h>
+#include <rl_tools/nn/parameters/persist.h>
+#include <rl_tools/nn/layers/dense/persist.h>
+#include <rl_tools/nn_models/sequential/persist.h>
 
-#include <backprop_tools/containers/persist_code.h>
-#include <backprop_tools/nn/parameters/persist_code.h>
-#include <backprop_tools/nn/layers/dense/persist_code.h>
-#include <backprop_tools/nn_models/sequential/persist_code.h>
+#include <rl_tools/containers/persist_code.h>
+#include <rl_tools/nn/parameters/persist_code.h>
+#include <rl_tools/nn/layers/dense/persist_code.h>
+#include <rl_tools/nn_models/sequential/persist_code.h>
 
-#include <backprop_tools/rl/utils/validation_analysis.h>
+#include <rl_tools/rl/utils/validation_analysis.h>
 
 
-namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include "parameters_training.h"
 
@@ -330,7 +330,7 @@ namespace multirotor_training{
                 checkpoint_name_ss << "actor_" << std::setw(15) << std::setfill('0') << ts.step;
                 std::string checkpoint_name = checkpoint_name_ss.str();
 
-#if defined(BACKPROP_TOOLS_ENABLE_HDF5) && !defined(BACKPROP_TOOLS_DISABLE_HDF5)
+#if defined(RL_TOOLS_ENABLE_HDF5) && !defined(RL_TOOLS_DISABLE_HDF5)
                 std::filesystem::path actor_output_path_hdf5 = actor_output_dir / (checkpoint_name + ".h5");
                 std::cout << "Saving actor checkpoint " << actor_output_path_hdf5 << std::endl;
                 try{
@@ -351,7 +351,7 @@ namespace multirotor_training{
                     bpt::malloc(ts.device, actor_checkpoint_buffer);
                     bpt::copy(ts.device, ts.device, ts.actor_critic.actor, actor_checkpoint);
                     std::filesystem::path actor_output_path_code = actor_output_dir / (checkpoint_name + ".h");
-                    auto actor_weights = bpt::save_code(ts.device, actor_checkpoint, std::string("backprop_tools::checkpoint::actor"), true);
+                    auto actor_weights = bpt::save_code(ts.device, actor_checkpoint, std::string("rl_tools::checkpoint::actor"), true);
                     std::cout << "Saving checkpoint at: " << actor_output_path_code << std::endl;
                     std::ofstream actor_output_file(actor_output_path_code);
                     actor_output_file << actor_weights;
@@ -366,11 +366,11 @@ namespace multirotor_training{
                         bpt::observe(ts.device, ts.env_eval, state, observation, rng_copy);
                         bpt::evaluate(ts.device, ts.actor_critic.actor, observation, action, actor_buffer);
                         bpt::evaluate(ts.device, actor_checkpoint, observation, action, actor_checkpoint_buffer);
-                        actor_output_file << "\n" << bpt::save_code(ts.device, observation, std::string("backprop_tools::checkpoint::observation"), true);
-                        actor_output_file << "\n" << bpt::save_code(ts.device, action, std::string("backprop_tools::checkpoint::action"), true);
-                        actor_output_file << "\n" << "namespace backprop_tools::checkpoint::meta{";
+                        actor_output_file << "\n" << bpt::save_code(ts.device, observation, std::string("rl_tools::checkpoint::observation"), true);
+                        actor_output_file << "\n" << bpt::save_code(ts.device, action, std::string("rl_tools::checkpoint::action"), true);
+                        actor_output_file << "\n" << "namespace rl_tools::checkpoint::meta{";
                         actor_output_file << "\n" << "   " << "char name[] = \"" << ts.run_name << "_" << checkpoint_name << "\";";
-                        actor_output_file << "\n" << "   " << "char commit_hash[] = \"" << BACKPROP_TOOLS_STRINGIFY(BACKPROP_TOOLS_COMMIT_HASH) << "\";";
+                        actor_output_file << "\n" << "   " << "char commit_hash[] = \"" << RL_TOOLS_STRINGIFY(RL_TOOLS_COMMIT_HASH) << "\";";
                         actor_output_file << "\n" << "}";
                         bpt::free(ts.device, observation);
                         bpt::free(ts.device, action);

@@ -1,12 +1,12 @@
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/abs_exp.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/squared.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/reward_functions/default.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/dynamics/crazy_flie.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/init/default.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/termination/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/abs_exp.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/squared.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/dynamics/crazy_flie.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/init/default.h>
+#include <learning_to_fly_in_seconds/simulator/parameters/termination/default.h>
 
 namespace parameters_sim2real{
-    namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+    namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
     template<typename T, typename TI>
     struct environment{
 //        static constexpr auto reward_function = bpt::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold_4<T>;
@@ -62,7 +62,7 @@ namespace parameters_sim2real{
 }
 
 namespace parameters_fast_learning{
-    namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+    namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
     template<typename T, typename TI>
     struct environment{
         static constexpr auto reward_function = bpt::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold<T>;

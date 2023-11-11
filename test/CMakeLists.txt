@@ -4,9 +4,9 @@ set(BUILD_GMOCK OFF CACHE BOOL "")
 add_subdirectory(lib/googletest EXCLUDE_FROM_ALL)
 include(GoogleTest)
 
-add_library(backprop_tools_tests INTERFACE)
-target_link_libraries(backprop_tools_tests INTERFACE GTest::gtest_main)
-target_compile_definitions(backprop_tools_tests INTERFACE BACKPROP_TOOLS_TESTS_DATA_PATH=${BACKPROP_TOOLS_TESTS_DATA_PATH})
+add_library(rl_tools_tests INTERFACE)
+target_link_libraries(rl_tools_tests INTERFACE GTest::gtest_main)
+target_compile_definitions(rl_tools_tests INTERFACE RL_TOOLS_TESTS_DATA_PATH=${RL_TOOLS_TESTS_DATA_PATH})
 
 
     # Environment Multirotor test
@@ -16,8 +16,8 @@ add_executable(
 )
 target_link_libraries(
         test_rl_environments_multirotor_multirotor
-        backprop_tools
-        backprop_tools_tests
+        rl_tools
+        rl_tools_tests
         learning_to_fly_in_seconds
 )
 gtest_discover_tests(test_rl_environments_multirotor_multirotor)
@@ -25,15 +25,15 @@ gtest_discover_tests(test_rl_environments_multirotor_multirotor)
 
 
 # Multirotor UI test
-if(${BACKPROP_TOOLS_TESTS_RL_ENVIRONMENTS_MULTIROTOR_UI_ENABLE})
+if(${RL_TOOLS_TESTS_RL_ENVIRONMENTS_MULTIROTOR_UI_ENABLE})
     add_executable(
             test_rl_environments_multirotor_ui_test
             src/rl/environments/multirotor/ui.cpp
     )
     target_link_libraries(
             test_rl_environments_multirotor_ui_test
-            backprop_tools
-            backprop_tools_tests
+            rl_tools
+            rl_tools_tests
             learning_to_fly_in_seconds
     )
     target_include_directories(
@@ -41,7 +41,7 @@ if(${BACKPROP_TOOLS_TESTS_RL_ENVIRONMENTS_MULTIROTOR_UI_ENABLE})
             PRIVATE
             lib/nlohmann/include
     )
-    BACKPROP_TOOLS_ADD_DEFINITIONS(test_rl_environments_multirotor_ui_test)
+    RL_TOOLS_ADD_DEFINITIONS(test_rl_environments_multirotor_ui_test)
     gtest_discover_tests(test_rl_environments_multirotor_ui_test)
 endif()
 

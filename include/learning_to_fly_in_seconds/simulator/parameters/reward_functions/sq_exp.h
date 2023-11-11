@@ -3,10 +3,10 @@
 
 
 #include "../../multirotor.h"
-#include <backprop_tools/utils/generic/typing.h>
-#include <backprop_tools/utils/generic/vector_operations.h>
+#include <rl_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/vector_operations.h>
 
-namespace backprop_tools::rl::environments::multirotor::parameters::reward_functions{
+namespace rl_tools::rl::environments::multirotor::parameters::reward_functions{
     template<typename T>
     struct SqExp{
         T additive_constant;
@@ -27,7 +27,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         SqExp<T> modes[N_MODES];
     };
     template<typename DEVICE, typename SPEC, typename T, typename T_STATE, typename TI_STATE, typename LATENT_STATE, typename ACTION_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::SqExp<T>& params, const rl::environments::multirotor::StateBase<T_STATE, TI_STATE>& state, const Matrix<ACTION_SPEC>& action, const rl::environments::multirotor::StateBase<T_STATE, TI_STATE>& next_state, RNG& rng, bool log_components = true) {
+    RL_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::SqExp<T>& params, const rl::environments::multirotor::StateBase<T_STATE, TI_STATE>& state, const Matrix<ACTION_SPEC>& action, const rl::environments::multirotor::StateBase<T_STATE, TI_STATE>& next_state, RNG& rng, bool log_components = true) {
         using TI = typename DEVICE::index_t;
         constexpr TI ACTION_DIM = rl::environments::Multirotor<SPEC>::ACTION_DIM;
         static_assert(ACTION_SPEC::ROWS == 1);
@@ -92,7 +92,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         return r;
     }
     template<typename DEVICE, typename SPEC, typename T, typename ACTION_SPEC, typename TI, TI N_MODES, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::SqExpMultiModal<T, TI, N_MODES>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::SqExpMultiModal<T, TI, N_MODES>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         T acc = 0;
         for(TI mode_i=0; mode_i < N_MODES; mode_i++){
             T output = reward(device, env, params.modes[mode_i], state, action, next_state, rng, mode_i==0);

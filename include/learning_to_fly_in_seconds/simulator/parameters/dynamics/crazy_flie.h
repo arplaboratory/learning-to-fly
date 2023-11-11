@@ -1,7 +1,7 @@
 
 #include "../../multirotor.h"
 
-namespace backprop_tools::rl::environments::multirotor::parameters::dynamics{
+namespace rl_tools::rl::environments::multirotor::parameters::dynamics{
     template<typename T, typename TI, typename REWARD_FUNCTION>
     constexpr typename ParametersBase <T, TI, TI(4), REWARD_FUNCTION>::Dynamics crazy_flie_old = {
             // Rotor positions

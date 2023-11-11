@@ -10,7 +10,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace backprop_tools::rl::environments::multirotor {
+namespace rl_tools::rl::environments::multirotor {
     namespace beast = boost::beast;         // from <boost/beast.hpp>
     namespace http = beast::http;           // from <boost/beast/http.hpp>
     namespace websocket = beast::websocket; // from <boost/beast/websocket.hpp>
@@ -106,11 +106,11 @@ namespace backprop_tools::rl::environments::multirotor {
         return message;
     }
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
+RL_TOOLS_NAMESPACE_WRAPPER_END
 
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
-namespace backprop_tools{
+RL_TOOLS_NAMESPACE_WRAPPER_START
+namespace rl_tools{
     template <typename DEVICE, typename ENVIRONMENT>
     void init(DEVICE& dev, ENVIRONMENT& env, rl::environments::multirotor::UI<ENVIRONMENT>& ui){
         using namespace rl::environments::multirotor;

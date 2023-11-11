@@ -20,10 +20,10 @@ FetchContent_Declare(test_rl_environments_multirotor_regression_test_code_new
 if(NOT test_rl_environments_multirotor_regression_test_code_POPULATED)
     FetchContent_Populate(test_rl_environments_multirotor_regression_test_code)
 endif()
-if(NOT test_rl_environments_multirotor_regression_test_code_new_POPULATED AND NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/include/backprop_tools_new)
-    FetchContent_Populate(test_rl_environments_multirotor_regression_test_code_new) # we have to do it this way around because in the old version the internal imports are absolute <backprop_tools/...> etc. hence can not be renamed
-    file(COPY ${test_rl_environments_multirotor_regression_test_code_new_SOURCE_DIR}/include/backprop_tools DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include)
-    file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/include/backprop_tools ${CMAKE_CURRENT_BINARY_DIR}/include/backprop_tools_new)
+if(NOT test_rl_environments_multirotor_regression_test_code_new_POPULATED AND NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/include/rl_tools_new)
+    FetchContent_Populate(test_rl_environments_multirotor_regression_test_code_new) # we have to do it this way around because in the old version the internal imports are absolute <rl_tools/...> etc. hence can not be renamed
+    file(COPY ${test_rl_environments_multirotor_regression_test_code_new_SOURCE_DIR}/include/rl_tools DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/include)
+    file(RENAME ${CMAKE_CURRENT_BINARY_DIR}/include/rl_tools ${CMAKE_CURRENT_BINARY_DIR}/include/rl_tools_new)
 endif()
 
 
@@ -33,7 +33,7 @@ add_executable(
 )
 target_link_libraries(
         test_rl_environments_multirotor_regression_test
-#        backprop_tools
+#        rl_tools
         GTest::gtest_main
 )
 target_include_directories(
@@ -49,4 +49,4 @@ target_include_directories(
 #        test_rl_environments_multirotor_regression_test
 #        PUBLIC
 #        ${CMAKE_SOURCE_DIR}/back
-BACKPROP_TOOLS_ADD_DEFINITIONS(test_rl_environments_multirotor_regression_test)
+RL_TOOLS_ADD_DEFINITIONS(test_rl_environments_multirotor_regression_test)

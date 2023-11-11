@@ -10,7 +10,7 @@ namespace dynamics_legacy{
 constexpr auto STATE_DIM = dynamics_legacy::STATE_DIM;
 constexpr auto ACTION_DIM = dynamics_legacy::ACTION_DIM;
 
-#include <backprop_tools/operations/cpu.h>
+#include <rl_tools/operations/cpu.h>
 
 #include <learning_to_fly_in_seconds/simulator/parameters/default.h>
 
@@ -18,14 +18,14 @@ constexpr auto ACTION_DIM = dynamics_legacy::ACTION_DIM;
 
 #include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
 
-#include <backprop_tools/utils/generic/memcpy.h>
+#include <rl_tools/utils/generic/memcpy.h>
 
-namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include <gtest/gtest.h>
 #include <random>
 #include <stdint.h>
-TEST(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR, MULTIROTOR) {
+TEST(RL_TOOLS_RL_ENVIRONMENTS_MULTIROTOR, MULTIROTOR) {
     using DEVICE = bpt::devices::DefaultCPU;
     using TI = typename DEVICE::index_t;
 

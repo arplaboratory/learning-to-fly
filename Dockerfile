@@ -13,15 +13,15 @@ RUN pip3 install tensorboard==2.12.2 six
 RUN mkdir $HOME/.ssh && ssh-keyscan github.com >> $HOME/.ssh/known_hosts
 RUN --mount=type=ssh git clone git@github.com:arplaboratory/learning_to_fly.git
 WORKDIR /learning_to_fly
-RUN --mount=type=ssh git submodule update --init -- external/backprop_tools
+RUN --mount=type=ssh git submodule update --init -- external/rl_tools
 RUN cd src/ui && ./get_dependencies.sh
-WORKDIR /learning_to_fly/external/backprop_tools
+WORKDIR /learning_to_fly/external/rl_tools
 RUN --mount=type=ssh git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
 WORKDIR /learning_to_fly
 WORKDIR /
 RUN mkdir build
 WORKDIR /build
-RUN cmake ../learning_to_fly -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON
+RUN cmake ../learning_to_fly -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON
 RUN cmake --build . -j$(nproc)
 
 WORKDIR /learning_to_fly

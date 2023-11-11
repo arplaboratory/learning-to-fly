@@ -4,7 +4,7 @@
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/training_simulation.gif" alt="animated" height='300'/>
 </div>
 <div align="center">
-    Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">BackpropTools</span>.
+    Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">RLtools</span>.
 </div>
 <br>
 <div align="center" >
@@ -18,7 +18,7 @@ Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
 
 
 ## Introduction
-This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
+This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [RLtools](https://github.com/rl-tools/rl-tools) deep reinforcement learning library.
 
 
 
@@ -59,13 +59,13 @@ Clone this repository:
 git clone https://github.com/arplaboratory/learning_to_fly
 cd learning_to_fly
 ```
-Then instantiate the `BackpropTools` submodule:
+Then instantiate the `RLtools` submodule:
 ```
-git submodule update --init -- external/backprop_tools
-cd external/backprop_tools
+git submodule update --init -- external/rl_tools
+cd external/rl_tools
 ```
 
-Then instantiate some dependencies of `BackpropTools` (for conveniences like checkpointing, Tensorboard logging, testing, etc.):
+Then instantiate some dependencies of `RLtools` (for conveniences like checkpointing, Tensorboard logging, testing, etc.):
 ```
 git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
 ```
@@ -89,8 +89,8 @@ cd ../../
 mkdir build
 cd build
 ```
-- Ubuntu + OpenBLAS: `cmake .. -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_OPENBLAS:BOOL=ON`
-- Ubuntu + MKL: `cmake .. -DCMAKE_BUILD_TYPE=Release -DBACKPROP_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
+- Ubuntu + OpenBLAS: `cmake .. -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_OPENBLAS:BOOL=ON`
+- Ubuntu + MKL: `cmake .. -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
 - macOS (tested on Sonoma): `cmake .. -DCMAKE_BUILD_TYPE=Release`
 
 Finally, we can build the targets:
@@ -115,7 +115,7 @@ tensorboard --logdir=logs
 ```
 
 ## Citing
-When using BackpropTools in an academic work please cite our publication using the following Bibtex citation:
+When using RLtools in an academic work please cite our publication using the following Bibtex citation:
 ```
 Bibtex tbd
 ```

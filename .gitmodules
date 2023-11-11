@@ -4,3 +4,6 @@
 [submodule "media"]
 	path = media
 	url = https://github.com/arplaboratory/learning_to_fly_in_seconds_media.git
+[submodule "external/rl_tools"]
+	path = external/rl_tools
+	url = https://github.com/rl-tools/rl-tools

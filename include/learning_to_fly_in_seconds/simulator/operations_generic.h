@@ -3,22 +3,22 @@
 
 #include "multirotor.h"
 
-#include <backprop_tools/utils/generic/vector_operations.h>
+#include <rl_tools/utils/generic/vector_operations.h>
 #include "quaternion_helper.h"
 
-#include <backprop_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/typing.h>
 
-#include <backprop_tools/rl/environments/operations_generic.h>
+#include <rl_tools/rl/environments/operations_generic.h>
 
-#ifndef BACKPROP_TOOLS_FUNCTION_PLACEMENT
-#define BACKPROP_TOOLS_FUNCTION_PLACEMENT
+#ifndef RL_TOOLS_FUNCTION_PLACEMENT
+#define RL_TOOLS_FUNCTION_PLACEMENT
 #endif
 
-namespace backprop_tools{
+namespace rl_tools{
     // State arithmetic for RK4 integration
     // scalar multiply
     template<typename DEVICE, typename T, typename TI, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar, typename rl::environments::multirotor::StateBase<T, TI>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar, typename rl::environments::multirotor::StateBase<T, TI>& out){
         for(int i = 0; i < 3; ++i){
             out.position[i]         = scalar * state.position[i]        ;
             out.orientation[i]      = scalar * state.orientation[i]     ;
@@ -28,34 +28,34 @@ namespace backprop_tools{
         out.orientation[3] = scalar * state.orientation[3];
     }
     template<typename DEVICE, typename T, typename TI, typename T2, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
         scalar_multiply(device, (const NEXT_COMPONENT&)state, scalar, (NEXT_COMPONENT&)out);
         for(int i = 0; i < 4; ++i){
             out.rpm[i] = scalar * state.rpm[i];
         }
     }
     template<typename DEVICE, typename STATE, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const STATE& state, T2 scalar, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, const STATE& state, T2 scalar, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
         static_assert(!STATE::REQUIRES_INTEGRATION);
         scalar_multiply(device, (const typename STATE::NEXT_COMPONENT&)state, scalar, (typename STATE::NEXT_COMPONENT&)out);
     }
     // scalar multiply in place
     template<typename DEVICE, typename T, typename TI, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar){
         scalar_multiply(device, state, scalar, state);
     }
     template<typename DEVICE, typename T, typename TI, typename T2, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar){
         scalar_multiply(device, state, scalar, state);
     }
     template<typename DEVICE, typename STATE, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, STATE& state, T2 scalar, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply(DEVICE& device, STATE& state, T2 scalar, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
         static_assert(!STATE::REQUIRES_INTEGRATION);
         scalar_multiply(device, (typename STATE::NEXT_COMPONENT&)state, scalar);
     }
 
     template<typename DEVICE, typename T, typename TI, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar, typename rl::environments::multirotor::StateBase<T, TI>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& state, T2 scalar, typename rl::environments::multirotor::StateBase<T, TI>& out){
         for(int i = 0; i < 3; ++i){
             out.position[i]         += scalar * state.position[i]        ;
             out.orientation[i]      += scalar * state.orientation[i]     ;
@@ -65,20 +65,20 @@ namespace backprop_tools{
         out.orientation[3] += scalar * state.orientation[3];
     }
     template<typename DEVICE, typename T, typename TI, typename T2, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, T2 scalar, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
         scalar_multiply_accumulate(device, static_cast<const NEXT_COMPONENT&>(state), scalar, static_cast<NEXT_COMPONENT&>(out));
         for(int i = 0; i < 4; ++i){
             out.rpm[i] += scalar * state.rpm[i];
         }
     }
     template<typename DEVICE, typename STATE, typename T2>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const STATE& state, T2 scalar, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void scalar_multiply_accumulate(DEVICE& device, const STATE& state, T2 scalar, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
         static_assert(!STATE::REQUIRES_INTEGRATION);
         scalar_multiply_accumulate(device, static_cast<const typename STATE::NEXT_COMPONENT&>(state), scalar, static_cast<typename STATE::NEXT_COMPONENT&>(out));
     }
 
     template<typename DEVICE, typename T, typename TI>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& s1, const typename rl::environments::multirotor::StateBase<T, TI>& s2, typename rl::environments::multirotor::StateBase<T, TI>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& s1, const typename rl::environments::multirotor::StateBase<T, TI>& s2, typename rl::environments::multirotor::StateBase<T, TI>& out){
         for(int i = 0; i < 3; ++i){
             out.position[i]         = s1.position[i] + s2.position[i];
             out.orientation[i]      = s1.orientation[i] + s2.orientation[i];
@@ -88,38 +88,38 @@ namespace backprop_tools{
         out.orientation[3] = s1.orientation[3] + s2.orientation[3];
     }
     template<typename DEVICE, typename T, typename TI, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s1, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s2, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s1, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s2, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
         add_accumulate(device, static_cast<const NEXT_COMPONENT&>(s1), static_cast<const NEXT_COMPONENT&>(s2), static_cast<NEXT_COMPONENT&>(out));
         for(int i = 0; i < 4; ++i){
             out.rpm[i] = s1.rpm[i] + s2.rpm[i];
         }
     }
     template<typename DEVICE, typename STATE>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const STATE& s1, const STATE& s2, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const STATE& s1, const STATE& s2, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
         static_assert(!STATE::REQUIRES_INTEGRATION);
         add_accumulate(device, static_cast<const typename STATE::NEXT_COMPONENT&>(s1), static_cast<const typename STATE::NEXT_COMPONENT&>(s2), static_cast<typename STATE::NEXT_COMPONENT&>(out));
     }
     template<typename DEVICE, typename T, typename TI>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& s, typename rl::environments::multirotor::StateBase<T, TI>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateBase<T, TI>& s, typename rl::environments::multirotor::StateBase<T, TI>& out){
         add_accumulate(device, s, out, out);
     }
     template<typename DEVICE, typename T, typename TI, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& s, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& out){
         add_accumulate(device, s, out, out);
     }
     template<typename DEVICE, typename STATE>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const STATE& s, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void add_accumulate(DEVICE& device, const STATE& s, STATE& out, utils::typing::enable_if_t<!STATE::REQUIRES_INTEGRATION, bool> disable = false){
         static_assert(!STATE::REQUIRES_INTEGRATION);
         add_accumulate(device, static_cast<const typename STATE::NEXT_COMPONENT&>(s), static_cast<const typename STATE::NEXT_COMPONENT&>(out), static_cast<typename STATE::NEXT_COMPONENT&>(out));
     }
 }
 
-#include <backprop_tools/utils/generic/integrators.h>
+#include <rl_tools/utils/generic/integrators.h>
 
 
-namespace backprop_tools::rl::environments::multirotor {
+namespace rl_tools::rl::environments::multirotor {
     template<typename DEVICE, typename T, typename TI, typename PARAMETERS>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateBase<T, TI>& state, const T* action, StateBase<T, TI>& state_change) {
+    RL_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateBase<T, TI>& state, const T* action, StateBase<T, TI>& state_change) {
         using STATE = StateBase<T, TI>;
 
         T thrust[3];
@@ -175,7 +175,7 @@ namespace backprop_tools::rl::environments::multirotor {
 //        multirotor_dynamics(device, params, (const typename STATE::LATENT_STATE&)state, action, state_change);
     }
     template<typename DEVICE, typename T, typename TI, typename PARAMETERS, typename NEXT_COMPONENT>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateRandomForce<T, TI, NEXT_COMPONENT>& state, const T* action, StateRandomForce<T, TI, NEXT_COMPONENT>& state_change){
+    RL_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateRandomForce<T, TI, NEXT_COMPONENT>& state, const T* action, StateRandomForce<T, TI, NEXT_COMPONENT>& state_change){
         multirotor_dynamics(device, params, static_cast<const NEXT_COMPONENT&>(state), action, static_cast<NEXT_COMPONENT&>(state_change));
 
         state_change.linear_velocity[0] += state.force[0] / params.dynamics.mass;
@@ -188,7 +188,7 @@ namespace backprop_tools::rl::environments::multirotor {
         utils::vector_operations::add_accumulate<DEVICE, T, 3>(angular_acceleration, state_change.angular_velocity);
     }
     template<typename DEVICE, typename T, typename TI, typename NEXT_COMPONENT, typename PARAMETERS>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateRotors<T, TI, NEXT_COMPONENT>& state, const T* action, StateRotors<T, TI, NEXT_COMPONENT>& state_change) {
+    RL_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics(DEVICE& device, const PARAMETERS& params, const StateRotors<T, TI, NEXT_COMPONENT>& state, const T* action, StateRotors<T, TI, NEXT_COMPONENT>& state_change) {
         multirotor_dynamics(device, params, static_cast<const NEXT_COMPONENT&>(state), state.rpm, static_cast<NEXT_COMPONENT&>(state_change));
         for(typename DEVICE::index_t i_rotor = 0; i_rotor < 4; i_rotor++){
             state_change.rpm[i_rotor] = (action[i_rotor] - state.rpm[i_rotor]) * 1/params.dynamics.rpm_time_constant;
@@ -196,7 +196,7 @@ namespace backprop_tools::rl::environments::multirotor {
 
     }
     template<typename DEVICE, typename T, typename PARAMETERS, typename STATE>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics_dispatch(DEVICE& device, const PARAMETERS& params, const STATE& state, const T* action, STATE& state_change) {
+    RL_TOOLS_FUNCTION_PLACEMENT void multirotor_dynamics_dispatch(DEVICE& device, const PARAMETERS& params, const STATE& state, const T* action, STATE& state_change) {
         // this dispatch function is required to pass the multirotor dynamics function to the integrator (euler, rk4) as a template parameter (so that it can be inlined/optimized at compile time)
         // If we would try to pass the multirotor_dynamics function directly the state type-based overloading would make the inference of the auto template parameter for the dynamics function in the integrator function impossible
 //        multirotor_dynamics<DEVICE, T, typename DEVICE::index_t, typename STATE::LATENT_STATE, PARAMETERS>(device, params, state, action, state_change);
@@ -204,11 +204,11 @@ namespace backprop_tools::rl::environments::multirotor {
     }
 
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
+RL_TOOLS_NAMESPACE_WRAPPER_END
 
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
-namespace backprop_tools{
+RL_TOOLS_NAMESPACE_WRAPPER_START
+namespace rl_tools{
     template<typename DEVICE, typename SPEC>
     void malloc(DEVICE&, rl::environments::Multirotor<SPEC>){
 
@@ -274,7 +274,7 @@ namespace backprop_tools{
         }
     }
     template<typename DEVICE, typename T, typename TI, typename SPEC, typename RNG, bool INHERIT_GUIDANCE = false>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateBase<T, TI>& state, RNG& rng, bool inherited_guidance = false){
+    RL_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateBase<T, TI>& state, RNG& rng, bool inherited_guidance = false){
         typename DEVICE::SPEC::MATH math_dev;
         typename DEVICE::SPEC::RANDOM random_dev;
         using STATE = typename rl::environments::multirotor::StateBase<T, TI>;
@@ -318,7 +318,7 @@ namespace backprop_tools{
         initial_parameters(device, env, state);
     }
     template<typename DEVICE, typename T_S, typename TI_S, typename SPEC, typename NEXT_COMPONENT, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& state, RNG& rng){
         typename DEVICE::SPEC::RANDOM random_dev;
         using T = typename SPEC::T;
 //        bool guidance = random::uniform_real_distribution(random_dev, (T)0, (T)1, rng) < env.parameters.mdp.init.guidance;
@@ -348,7 +348,7 @@ namespace backprop_tools{
 
     }
     template<typename DEVICE, typename T, typename TI, typename SPEC, typename NEXT_COMPONENT, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state, RNG& rng){
         sample_initial_state(device, env, static_cast<NEXT_COMPONENT&>(state), rng);
         T min_rpm, max_rpm;
         if(env.parameters.mdp.init.relative_rpm){
@@ -370,7 +370,7 @@ namespace backprop_tools{
         }
     }
     template<typename DEVICE, typename T_S, typename TI_S, TI_S HISTORY_LENGTH, typename NEXT_COMPONENT, typename SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_COMPONENT>& state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static void sample_initial_state(DEVICE& device, rl::environments::Multirotor<SPEC>& env, typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_COMPONENT>& state, RNG& rng){
         using MULTIROTOR = rl::environments::Multirotor<SPEC>;
         using TI = typename DEVICE::index_t;
         sample_initial_state(device, env, static_cast<typename rl::environments::multirotor::StateRotors<T_S, TI_S, NEXT_COMPONENT>&>(state), rng);
@@ -382,12 +382,12 @@ namespace backprop_tools{
     }
     namespace rl::environments::multirotor{
         template<typename DEVICE, typename SPEC, typename STATE, typename OBSERVATION_TI, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, rl::environments::multirotor::observation::LastComponent<OBSERVATION_TI>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, rl::environments::multirotor::observation::LastComponent<OBSERVATION_TI>, Matrix<OBS_SPEC>& observation, RNG& rng){
             static_assert(OBS_SPEC::COLS == 0);
             static_assert(OBS_SPEC::ROWS == 1);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::Position<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::Position<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using OBSERVATION = rl::environments::multirotor::observation::Position<OBSERVATION_SPEC>;
             static_assert(OBS_SPEC::COLS >= OBSERVATION::CURRENT_DIM);
             static_assert(OBS_SPEC::ROWS == 1);
@@ -407,7 +407,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::OrientationQuaternion<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::OrientationQuaternion<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::OrientationQuaternion<OBSERVATION_SPEC>;
@@ -426,7 +426,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::OrientationRotationMatrix<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::OrientationRotationMatrix<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::OrientationRotationMatrix<OBSERVATION_SPEC>;
@@ -453,7 +453,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::LinearVelocity<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::LinearVelocity<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::LinearVelocity<OBSERVATION_SPEC>;
@@ -472,7 +472,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::AngularVelocity<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::AngularVelocity<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::AngularVelocity<OBSERVATION_SPEC>;
@@ -491,7 +491,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::RotorSpeeds<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::RotorSpeeds<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::RotorSpeeds<OBSERVATION_SPEC>;
@@ -505,7 +505,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::ActionHistory<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::ActionHistory<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::ActionHistory<OBSERVATION_SPEC>;
@@ -523,7 +523,7 @@ namespace backprop_tools{
             observe(device, env, state, typename OBSERVATION::NEXT_COMPONENT{}, next_observation, rng);
         }
         template<typename DEVICE, typename SPEC, typename OBSERVATION_SPEC, typename OBS_SPEC, typename RNG>
-        BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::RandomForce<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
+        RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, rl::environments::multirotor::observation::RandomForce<OBSERVATION_SPEC>, Matrix<OBS_SPEC>& observation, RNG& rng){
             using T = typename SPEC::T;
             using TI = typename DEVICE::index_t;
             using OBSERVATION = rl::environments::multirotor::observation::RandomForce<OBSERVATION_SPEC>;
@@ -538,25 +538,25 @@ namespace backprop_tools{
         }
     }
     template<typename DEVICE, typename SPEC, typename STATE, typename OBS_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, Matrix<OBS_SPEC>& observation, RNG& rng){
         using ENVIRONMENT = rl::environments::Multirotor<SPEC>;
         static_assert(OBS_SPEC::COLS == ENVIRONMENT::OBSERVATION_DIM);
         static_assert(OBS_SPEC::ROWS == 1);
         rl::environments::multirotor::observe(device, env, state, typename ENVIRONMENT::Observation{}, observation, rng);
     }
     template<typename DEVICE, typename SPEC, typename STATE, typename OBS_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, Matrix<OBS_SPEC>& observation, RNG& rng){
         using ENVIRONMENT = rl::environments::Multirotor<SPEC>;
         static_assert(OBS_SPEC::COLS == ENVIRONMENT::OBSERVATION_DIM_PRIVILEGED);
         static_assert(OBS_SPEC::ROWS == 1);
         rl::environments::multirotor::observe(device, env, state, typename ENVIRONMENT::ObservationPrivileged{}, observation, rng);
     }
 //    template<typename DEVICE, typename T, typename TI, typename SPEC, typename OBS_SPEC, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateLatentEmpty<T, TI>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+//    RL_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateLatentEmpty<T, TI>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
 //        static_assert(OBS_SPEC::COLS == 0);
 //    }
 //    template<typename DEVICE, typename T, typename TI, typename SPEC, typename OBS_SPEC, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateLatentRandomForce<T, TI>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+//    RL_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateLatentRandomForce<T, TI>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
 //        static_assert(OBS_SPEC::COLS == 6);
 //        for(TI i = 0; i < 3; i++){
 //            set(observation, 0, 0 + i, state.force[i]);
@@ -564,7 +564,7 @@ namespace backprop_tools{
 //        }
 //    }
 //    template<typename DEVICE, typename T, typename TI, typename SPEC, typename OBS_SPEC, typename LATENT_STATE, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBase<T, TI, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+//    RL_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBase<T, TI, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
 //        using MULTIROTOR = rl::environments::Multirotor<SPEC>;
 //        static_assert(OBS_SPEC::COLS == MULTIROTOR::OBSERVATION_DIM_BASE + MULTIROTOR::OBSERVATION_DIM_ORIENTATION + MULTIROTOR::OBSERVATION_DIM_PRIVILEGED_LATENT_STATE);
 //        auto base_observation = view(device, observation, matrix::ViewSpec<1, MULTIROTOR::OBSERVATION_DIM_BASE + MULTIROTOR::OBSERVATION_DIM_ORIENTATION>{}, 0, 0);
@@ -573,7 +573,7 @@ namespace backprop_tools{
 //        observe_privileged(device, env, (const LATENT_STATE&)state, latent_observation, rng);
 //    }
 //    template<typename DEVICE, typename T_H, typename TI_H, TI_H HISTORY_LENGTH, typename SPEC, typename OBS_SPEC, typename LATENT_STATE, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBaseRotorsHistory<T_H, TI_H, HISTORY_LENGTH, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+//    RL_TOOLS_FUNCTION_PLACEMENT static void observe(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBaseRotorsHistory<T_H, TI_H, HISTORY_LENGTH, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
 //        using MULTIROTOR = rl::environments::Multirotor<SPEC>;
 //        static_assert(OBS_SPEC::ROWS == 1);
 //        static_assert(OBS_SPEC::COLS == MULTIROTOR::OBSERVATION_DIM);
@@ -588,7 +588,7 @@ namespace backprop_tools{
 //        }
 //    }
 //    template<typename DEVICE, typename T_S, typename TI_S, typename SPEC, typename OBS_SPEC, typename LATENT_STATE, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBaseRotors<T_S, TI_S, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
+//    RL_TOOLS_FUNCTION_PLACEMENT static void observe_privileged(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::StateBaseRotors<T_S, TI_S, LATENT_STATE>& state, Matrix<OBS_SPEC>& observation, RNG& rng){
 //        using MULTIROTOR = rl::environments::Multirotor<SPEC>;
 //        using T = typename SPEC::T;
 //        using TI = typename DEVICE::index_t;
@@ -603,9 +603,9 @@ namespace backprop_tools{
 //        }
 //    }
 //    template<typename DEVICE, typename SPEC, typename T, typename TI>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, rl::environments::multirotor::StateBase<T, TI>& state) {
+//    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, rl::environments::multirotor::StateBase<T, TI>& state) {
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T_S, typename TI_S, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateBase<T_S, TI_S>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateBase<T_S, TI_S>& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateBase<T_S, TI_S>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateBase<T_S, TI_S>& next_state, RNG& rng) {
         using T = T_S;
         using TI = TI_S;
         T quaternion_norm = 0;
@@ -618,9 +618,9 @@ namespace backprop_tools{
         }
     }
 //    template<typename DEVICE, typename SPEC, typename T, typename TI, typename NEXT_COMPONENT>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state) {
+//    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, rl::environments::multirotor::StateRotors<T, TI, NEXT_COMPONENT>& state) {
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T_S, typename TI_S, typename NEXT_COMPONENT, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRotors<T_S, TI_S, NEXT_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRotors<T_S, TI_S, NEXT_COMPONENT>& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRotors<T_S, TI_S, NEXT_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRotors<T_S, TI_S, NEXT_COMPONENT>& next_state, RNG& rng) {
         post_integration(device, env, static_cast<const NEXT_COMPONENT&>(state), action, static_cast<NEXT_COMPONENT&>(next_state), rng);
         using MULTIROTOR = rl::environments::Multirotor<SPEC>;
         for(typename DEVICE::index_t rpm_i = 0; rpm_i < MULTIROTOR::ACTION_DIM; rpm_i++){
@@ -628,7 +628,7 @@ namespace backprop_tools{
         }
     }
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T_S, typename TI_S, typename NEXT_COMPONENT, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRandomForce<T_S, TI_S, NEXT_COMPONENT>& next_state, RNG& rng) {
         post_integration(device, env, static_cast<const NEXT_COMPONENT&>(state), action, static_cast<NEXT_COMPONENT&>(next_state), rng);
         next_state.force[0] = state.force[0];
         next_state.force[1] = state.force[1];
@@ -638,7 +638,7 @@ namespace backprop_tools{
         next_state.torque[2] = state.torque[2];
     }
     template<typename DEVICE, typename T_S, typename TI_S, typename NEXT_STATE_COMPONENT, TI_S HISTORY_LENGTH, typename SPEC, typename ACTION_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_STATE_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_STATE_COMPONENT>& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_STATE_COMPONENT>& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::multirotor::StateRotorsHistory<T_S, TI_S, HISTORY_LENGTH, NEXT_STATE_COMPONENT>& next_state, RNG& rng) {
         using MULTIROTOR = rl::environments::Multirotor<SPEC>;
         using TI = typename DEVICE::index_t;
         static_assert(ACTION_SPEC::COLS == MULTIROTOR::ACTION_DIM);
@@ -655,13 +655,13 @@ namespace backprop_tools{
         }
     }
 //    template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T_S, typename TI_S, typename STATE, typename RNG>
-//    BACKPROP_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, const Matrix<ACTION_SPEC>& action, STATE& next_state, RNG& rng) {
+//    RL_TOOLS_FUNCTION_PLACEMENT void post_integration(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const STATE& state, const Matrix<ACTION_SPEC>& action, STATE& next_state, RNG& rng) {
 //        static_assert(!STATE::REQUIRES_INTEGRATION);
 //        post_integration(device, env, static_cast<typename STATE::NEXT_COMPONENT&>(state), action, static_cast<typename STATE::NEXT_COMPONENT&>(next_state), rng);
 //    }
     // todo: make state const again
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T step(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T step(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         using STATE = typename rl::environments::Multirotor<SPEC>::State;
         using T = typename SPEC::T;
         using TI = typename DEVICE::index_t;
@@ -688,7 +688,7 @@ namespace backprop_tools{
     }
 
     template<typename DEVICE, typename SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static bool terminated(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, RNG& rng){
+    RL_TOOLS_FUNCTION_PLACEMENT static bool terminated(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, RNG& rng){
         using T = typename SPEC::T;
         using TI = typename DEVICE::index_t;
         if(env.parameters.mdp.termination.enabled){
@@ -706,13 +706,13 @@ namespace backprop_tools{
     }
 }
 #include "parameters/reward_functions/reward_functions.h"
-namespace backprop_tools{
+namespace rl_tools{
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         return rl::environments::multirotor::parameters::reward_functions::reward(device, env, env.parameters.mdp.reward, state, action, next_state, rng);
     }
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT void log_reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT void log_reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action, const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         rl::environments::multirotor::parameters::reward_functions::log_reward(device, env, env.parameters.mdp.reward, state, action, next_state, rng);
     }
 }

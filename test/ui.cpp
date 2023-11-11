@@ -1,18 +1,18 @@
-#include <backprop_tools/operations/cpu.h>
+#include <rl_tools/operations/cpu.h>
 
-#include <backprop_tools/nn_models/operations_cpu.h>
+#include <rl_tools/nn_models/operations_cpu.h>
 
-#include <backprop_tools/rl/environments/environments.h>
-#include <backprop_tools/rl/environments/multirotor/ui.h>
-#include <backprop_tools/rl/environments/multirotor/multirotor.h>
-#include <backprop_tools/rl/environments/multirotor/parameters/default.h>
+#include <rl_tools/rl/environments/environments.h>
+#include <rl_tools/rl/environments/multirotor/ui.h>
+#include <rl_tools/rl/environments/multirotor/multirotor.h>
+#include <rl_tools/rl/environments/multirotor/parameters/default.h>
 
-#include <backprop_tools/rl/environments/multirotor/operations_cpu.h>
+#include <rl_tools/rl/environments/multirotor/operations_cpu.h>
 
-#include <backprop_tools/rl/utils/evaluation.h>
-#include <backprop_tools/nn_models/persist.h>
+#include <rl_tools/rl/utils/evaluation.h>
+#include <rl_tools/nn_models/persist.h>
 
-namespace bpt = BACKPROP_TOOLS_NAMESPACE_WRAPPER ::backprop_tools;
+namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 using DTYPE = float;
 #include "../multirotor_training/parameters.h"
@@ -32,7 +32,7 @@ using ENVIRONMENT = typename parameters_environment::ENVIRONMENT;
 using parameters_rl = parameter_set::rl<DEVICE, DTYPE, ENVIRONMENT>;
 
 
-//TEST(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, TEST_UI) {
+//TEST(RL_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, TEST_UI) {
 //    DEVICE::SPEC::LOGGING logger;
 //    DEVICE device(logger);
 //    bpt::rl::environments::multirotor::UI<ENVIRONMENT> ui;
@@ -61,14 +61,14 @@ using parameters_rl = parameter_set::rl<DEVICE, DTYPE, ENVIRONMENT>;
 
 std::string get_actor_file_path(){
     std::string DATA_FILE_PATH = "./actor.h5";
-    const char* data_file_path = std::getenv("BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MULTIROTOR_UI_ACTOR_FILE_PATH");
+    const char* data_file_path = std::getenv("RL_TOOLS_TEST_RL_ENVIRONMENTS_MULTIROTOR_UI_ACTOR_FILE_PATH");
     if (data_file_path != NULL){
         DATA_FILE_PATH = std::string(data_file_path);
-//            std::runtime_error("Environment variable BACKPROP_TOOLS_TEST_DATA_DIR not set. Skipping test.");
+//            std::runtime_error("Environment variable RL_TOOLS_TEST_DATA_DIR not set. Skipping test.");
     }
     return DATA_FILE_PATH;
 }
-//TEST(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, LOAD_ACTOR) {
+//TEST(RL_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, LOAD_ACTOR) {
 //    DEVICE::SPEC::LOGGING logger;
 //    DEVICE device(logger);
 //    bpt::rl::environments::multirotor::UI<ENVIRONMENT> ui;
@@ -113,14 +113,14 @@ std::string get_actor_file_path(){
 //}
 std::string get_replay_buffer_file_path(){
     std::string DATA_FILE_PATH = "./replay_buffer.h5";
-    const char* data_file_path = std::getenv("BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MULTIROTOR_UI_REPLAY_BUFFER_FILE_PATH");
+    const char* data_file_path = std::getenv("RL_TOOLS_TEST_RL_ENVIRONMENTS_MULTIROTOR_UI_REPLAY_BUFFER_FILE_PATH");
     if (data_file_path != NULL){
         DATA_FILE_PATH = std::string(data_file_path);
-//            std::runtime_error("Environment variable BACKPROP_TOOLS_TEST_DATA_DIR not set. Skipping test.");
+//            std::runtime_error("Environment variable RL_TOOLS_TEST_DATA_DIR not set. Skipping test.");
     }
     return DATA_FILE_PATH;
 }
-TEST(BACKPROP_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, LOAD_REPLAY_BUFFER) {
+TEST(RL_TOOLS_RL_ENVIRONMENTS_MULTIROTOR_UI, LOAD_REPLAY_BUFFER) {
     DEVICE::SPEC::LOGGING logger;
     DEVICE device;
     device.logger = &logger;

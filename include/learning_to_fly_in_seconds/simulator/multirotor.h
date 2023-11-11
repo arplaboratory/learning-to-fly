@@ -1,9 +1,9 @@
 #ifndef LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_MULTIROTOR_H
 #define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_MULTIROTOR_H
 
-#include <backprop_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/typing.h>
 
-namespace backprop_tools::rl::environments::multirotor{
+namespace rl_tools::rl::environments::multirotor{
     template <typename T, typename TI, TI N, typename T_REWARD_FUNCTION>
     struct ParametersBase{
         struct Dynamics{
@@ -331,10 +331,10 @@ namespace backprop_tools::rl::environments::multirotor{
         using STATIC_PARAMETERS = T_STATIC_PARAMETERS;
     };
 }
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_END
+RL_TOOLS_NAMESPACE_WRAPPER_END
 
-BACKPROP_TOOLS_NAMESPACE_WRAPPER_START
-namespace backprop_tools::rl::environments{
+RL_TOOLS_NAMESPACE_WRAPPER_START
+namespace rl_tools::rl::environments{
     template <typename SPEC>
     struct Multirotor{
         using T = typename SPEC::T;

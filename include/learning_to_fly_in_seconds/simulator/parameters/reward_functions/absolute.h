@@ -2,10 +2,10 @@
 #define LEARNING_TO_FLY_IN_SECONDS_SIMULATOR_PARAMETERS_REWARD_FUNCTIONS_ABSOLUTE_H
 
 #include "../../multirotor.h"
-#include <backprop_tools/utils/generic/typing.h>
-#include <backprop_tools/utils/generic/vector_operations.h>
+#include <rl_tools/utils/generic/typing.h>
+#include <rl_tools/utils/generic/vector_operations.h>
 
-namespace backprop_tools::rl::environments::multirotor::parameters::reward_functions{
+namespace rl_tools::rl::environments::multirotor::parameters::reward_functions{
     template<typename T>
     struct Absolute{
         bool non_negative;
@@ -22,7 +22,7 @@ namespace backprop_tools::rl::environments::multirotor::parameters::reward_funct
         T action;
     };
     template<typename DEVICE, typename SPEC, typename ACTION_SPEC, typename T, typename RNG>
-    BACKPROP_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Absolute<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
+    RL_TOOLS_FUNCTION_PLACEMENT static typename SPEC::T reward(DEVICE& device, const rl::environments::Multirotor<SPEC>& env, const rl::environments::multirotor::parameters::reward_functions::Absolute<T>& params, const typename rl::environments::Multirotor<SPEC>::State& state, const Matrix<ACTION_SPEC>& action,  const typename rl::environments::Multirotor<SPEC>::State& next_state, RNG& rng) {
         using TI = typename DEVICE::index_t;
         constexpr TI ACTION_DIM = rl::environments::Multirotor<SPEC>::ACTION_DIM;
         T orientation_cost = 1 - state.orientation[0] * state.orientation[0]; //math::abs(device.math, 2 * math::acos(device.math, quaternion_w));
