@@ -1,9 +1,9 @@
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/abs_exp.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/squared.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/default.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/dynamics/crazy_flie.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/init/default.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/termination/default.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/abs_exp.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/squared.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/default.h>
+#include <learning_to_fly/simulator/parameters/dynamics/crazy_flie.h>
+#include <learning_to_fly/simulator/parameters/init/default.h>
+#include <learning_to_fly/simulator/parameters/termination/default.h>
 
 namespace parameters_sim2real{
     namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;

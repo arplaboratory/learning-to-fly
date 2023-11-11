@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0003 NEW)
 
 
-project(learning_to_fly_in_seconds)
+project(learning_to_fly)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -16,8 +16,8 @@ if(APPLE)
     set(RL_TOOLS_BACKEND_ENABLE_ACCELERATE ON)
 endif()
 
-add_library(learning_to_fly_in_seconds INTERFACE)
-target_include_directories(learning_to_fly_in_seconds INTERFACE include)
+add_library(learning_to_fly INTERFACE)
+target_include_directories(learning_to_fly INTERFACE include)
 
 #set(RL_TOOLS_ENABLE_TESTS ON)
 add_subdirectory(external/rl_tools)

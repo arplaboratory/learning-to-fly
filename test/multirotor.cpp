@@ -12,11 +12,11 @@ constexpr auto ACTION_DIM = dynamics_legacy::ACTION_DIM;
 
 #include <rl_tools/operations/cpu.h>
 
-#include <learning_to_fly_in_seconds/simulator/parameters/default.h>
+#include <learning_to_fly/simulator/parameters/default.h>
 
-#include <learning_to_fly_in_seconds/simulator/multirotor.h>
+#include <learning_to_fly/simulator/multirotor.h>
 
-#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
+#include <learning_to_fly/simulator/operations_cpu.h>
 
 #include <rl_tools/utils/generic/memcpy.h>
 

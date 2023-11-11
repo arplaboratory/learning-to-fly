@@ -1,13 +1,13 @@
 #ifndef RL_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_H
 #define RL_TOOLS_SRC_RL_ENVIRONMENTS_MULTIROTOR_PARAMETERS_H
 
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/abs_exp.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/squared.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/absolute.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/reward_functions/default.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/dynamics/crazy_flie.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/init/default.h>
-#include <learning_to_fly_in_seconds/simulator/parameters/termination/default.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/abs_exp.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/squared.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/absolute.h>
+#include <learning_to_fly/simulator/parameters/reward_functions/default.h>
+#include <learning_to_fly/simulator/parameters/dynamics/crazy_flie.h>
+#include <learning_to_fly/simulator/parameters/init/default.h>
+#include <learning_to_fly/simulator/parameters/termination/default.h>
 
 #include <rl_tools/utils/generic/typing.h>
 

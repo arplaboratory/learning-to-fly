@@ -7,7 +7,7 @@ target_link_libraries(
         ui
         PRIVATE
         rl_tools
-        learning_to_fly_in_seconds
+        learning_to_fly
         Boost::boost
 )
 endif()
@@ -17,14 +17,14 @@ target_link_libraries(
         training_headless
         PRIVATE
         rl_tools
-        learning_to_fly_in_seconds
+        learning_to_fly
 )
 add_executable(training_benchmark training.cpp)
 target_link_libraries(
         training_benchmark
         PRIVATE
         rl_tools
-        learning_to_fly_in_seconds
+        learning_to_fly
 )
 target_compile_definitions(training_benchmark PRIVATE LEARNING_TO_FLY_IN_SECONDS_BENCHMARK)
 
@@ -33,7 +33,7 @@ target_link_libraries(
         ablation_study
         PRIVATE
         rl_tools
-        learning_to_fly_in_seconds
+        learning_to_fly
 )
 
 

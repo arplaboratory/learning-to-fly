@@ -12,8 +12,8 @@
 #include <filesystem>
 #include <fstream>
 #include <rl_tools/operations/cpu_mux.h>
-#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
-#include <learning_to_fly_in_seconds/simulator/ui.h>
+#include <learning_to_fly/simulator/operations_cpu.h>
+#include <learning_to_fly/simulator/ui.h>
 namespace bpt = rl_tools;
 
 //#include "../td3/parameters.h"

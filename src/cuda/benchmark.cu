@@ -1,7 +1,7 @@
 #include <rl_tools/operations/cuda.h>
 
 
-#include <learning_to_fly_in_seconds/simulator/operations_cpu.h>
+#include <learning_to_fly/simulator/operations_cpu.h>
 #include "parameters.h"
 namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
