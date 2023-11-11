@@ -13,6 +13,8 @@
 ## Introduction
 This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
 
+
+
 ## Instructions to run the code
 ### Docker installation (isolated)
 The easiest way to run the code is probably using Docker. If you want to run the code on bare metal jump [Native installation](#Native-installation).
@@ -105,5 +107,10 @@ Then from the original directory `learning_to_fly`:
 tensorboard --logdir=logs
 ```
 
+## Citing
+When using BackpropTools in an academic work please cite our publication using the following Bibtex citation:
+```
+Bibtex tbd
+```
 
 
