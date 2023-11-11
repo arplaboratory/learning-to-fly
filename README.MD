@@ -14,7 +14,31 @@
 This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
 
 ### Instructions to run the code
-Note: If you would like to run it inside a Docker container see the [Docker](#docker) section below.
+### Docker installation (isolated)
+The easiest way to run the code is probably using Docker. If you want to run the code on bare metal jump [Native installation](#Native-installation).
+
+First, install Docker on your machine. Then move to the original directory `learning_to_fly` and build the Docker image:
+```
+docker build -t learning_to_fly .
+```
+After that you can run it using e.g.:
+```
+docker run -it --rm -p 8000:8000 learning_to_fly
+```
+This will open the port `8000` for the UI of the training program and run it inside the container.
+
+Navigate to "http://localhost:8000" with your browser to see the training UI and start the training. The training UI configuration does not log data by default. If you want to inspect the training data run:
+```
+docker run -it --rm -p 6006:6006 learning_to_fly training_headless
+```
+Navigate to "http://localhost:6006" with your browser to investigate the Tensorboard logs.
+
+If you would like to benchmark the training speed you can use:
+```
+docker run -it --rm learning_to_fly training_benchmark
+```
+This is the fastest configuration, without logging, UI, checkpointing etc.
+### Native installation
 Clone this repository:
 ```
 git clone https://github.com/arplaboratory/learning_to_fly
@@ -77,25 +101,3 @@ tensorboard --logdir=logs
 
 
 
-### Docker
-The easiest way to run the code is probably using Docker. First, install Docker on your machine. Then move to the original directory `learning_to_fly` and build the Docker image:
-```
-docker build -t learning_to_fly .
-```
-After that you can run it using e.g.:
-```
-docker run -it --rm -p 8000:8000 learning_to_fly
-```
-This will open the port `8000` for the UI of the training program and run it inside the container.
-
-Navigate to "http://localhost:8000" with your browser to see the training UI and start the training. The training UI configuration does not log data by default. If you want to inspect the training data run:
-```
-docker run -it --rm -p 6006:6006 learning_to_fly training_headless
-```
-Navigate to "http://localhost:6006" with your browser to investigate the Tensorboard logs.
-
-If you would like to benchmark the training speed you can use:
-```
-docker run -it --rm learning_to_fly training_benchmark
-```
-This is the fastest configuration, without logging, UI, checkpointing etc.
