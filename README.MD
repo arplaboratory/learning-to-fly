@@ -27,7 +27,13 @@ docker run -it --rm -p 8000:8000 learning_to_fly
 ```
 This will open the port `8000` for the UI of the training program and run it inside the container.
 
-Navigate to "http://localhost:8000" with your browser to see the training UI and start the training. The training UI configuration does not log data by default. If you want to inspect the training data run:
+Navigate to "http://localhost:8000" with your browser to see the training UI and start the training.
+
+<div align="center">
+<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/simulator_screenshot.png" height='300'/>
+</div>
+
+The training UI configuration does not log data by default. If you want to inspect the training data run:
 ```
 docker run -it --rm -p 6006:6006 learning_to_fly training_headless
 ```
