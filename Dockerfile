@@ -28,6 +28,9 @@ WORKDIR /learning_to_fly
 RUN echo "#!/bin/bash" > /init.sh && \
     chmod +x /init.sh && \
     echo "tensorboard --logdir=logs --bind_all&" >> /init.sh && \
+    echo "echo Waiting for Tensorboard" >> /init.sh && \
+    echo "sleep 5" >> /init.sh && \
+    echo "echo Running command:" >> /init.sh && \
     echo "export PATH=\"\$PATH:/build/src\"" >> /init.sh && \
     echo "\$@" >> /init.sh
 CMD ["/build/src/ui", "0.0.0.0", "8000"]
