@@ -10,10 +10,10 @@
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/trajectory_tracking_long_exposure.gif" alt="animated" height='200'/>
 </div>
 
-### Introduction
+## Introduction
 This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
 
-### Instructions to run the code
+## Instructions to run the code
 ### Docker installation (isolated)
 The easiest way to run the code is probably using Docker. If you want to run the code on bare metal jump [Native installation](#Native-installation).
 
