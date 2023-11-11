@@ -4,12 +4,14 @@
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/training_simulation.gif" alt="animated" height='300'/>
 </div>
 <div align="center">
-    Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">BackpropTools</span> then transfered to a real Crazyflie:
+    Trained for 18s on a 2020 MacBook Pro (M1) using <span style="color:#7DB9B6">BackpropTools</span>.
 </div>
 <div align="center">
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/trajectory_tracking_long_exposure.gif" alt="animated" height='200'/>
 </div>
-
+<div align="center">
+Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
+</div>
 ## Introduction
 This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [BackpropTools](https://github.com/BackpropTools/BackpropTools) deep reinforcement learning library.
 
