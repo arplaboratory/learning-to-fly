@@ -27,7 +27,7 @@ docker run -it --rm -p 8000:8000 learning_to_fly
 ```
 This will open the port `8000` for the UI of the training program and run it inside the container.
 
-Navigate to "http://localhost:8000" with your browser to see the training UI and start the training.
+Navigate to "http://localhost:8000" with your browser, and you should see something like (after starting the training):
 
 <div align="center">
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/simulator_screenshot.png" />
