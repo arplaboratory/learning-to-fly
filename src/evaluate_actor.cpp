@@ -55,7 +55,9 @@ namespace TEST_DEFINITIONS{
     constexpr bool INJECT_EXPLORATION_NOISE = false;
     constexpr bool DISABLE_DISTURBANCES = true;
     constexpr bool AMPLIFY_DISTURBANCES = false;
-    constexpr TI N_ENVIRONMENTS = 10;
+    constexpr TI N_ENVIRONMENTS = 100;
+    constexpr T max_pos_diff = 0.6;
+    constexpr T max_vel_diff = 5;
 }
 
 template <typename T>
@@ -224,6 +226,12 @@ int main(int argc, char** argv) {
         }
         for(TI env_i=0; env_i < N_ENVIRONMENTS; env_i++){
             bpt::sample_initial_state(dev, env, states[env_i], rng);
+            states[env_i].position[0] *= 3;
+            states[env_i].position[1] *= 3;
+            states[env_i].position[2] *= 3;
+            states[env_i].position[0] += 0.01307;
+            states[env_i].position[1] += 0.1828;
+            states[env_i].position[2] += 0.0714;
         }
         std::cout << "Random force: " << states[0].force[0] << ", " << states[0].force[1] << ", " << states[0].force[2] << std::endl;
 //        bpt::initial_state(dev, env, state);
@@ -246,8 +254,6 @@ int main(int argc, char** argv) {
                     trajectory(((T)step_i - TRACKING_START_STEP) * env.parameters.integration.dt, target_state.position, target_state.linear_velocity);
                     observation_state = state;
                     observation_state_clamped = state;
-                    constexpr T max_pos_diff = 0.6;
-                    constexpr T max_vel_diff = 5;
                     observation_state.position[0] = state.position[0] - target_state.position[0];
                     observation_state.position[1] = state.position[1] - target_state.position[1];
                     observation_state.position[2] = state.position[2] - target_state.position[2];
@@ -267,6 +273,9 @@ int main(int argc, char** argv) {
                 }
                 else{
                     observation_state = state;
+                    observation_state_clamped.position[0] = bpt::math::clamp(dev.math, observation_state.position[0], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[1] = bpt::math::clamp(dev.math, observation_state.position[1], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[2] = bpt::math::clamp(dev.math, observation_state.position[2], -max_pos_diff, max_pos_diff);
                     observation_state_clamped = state;
                 }
                 bpt::observe(dev, env, observation_state_clamped, observation, rng);
@@ -276,7 +285,7 @@ int main(int argc, char** argv) {
 //            }
                 bpt::clamp(dev, action, (T)-1, (T)1);
                 T dt = bpt::step(dev, env, state, action, next_state, rng);
-                constexpr T time_lapse = 1;
+                constexpr T time_lapse = 0.05;
                 bool terminated_flag = bpt::terminated(dev, env, observation_state, rng);
                 reward_acc += bpt::reward(dev, env, state, action, next_state, rng);
                 bpt::set_state(dev, ui, state, action);
