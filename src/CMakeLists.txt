@@ -36,6 +36,16 @@ target_link_libraries(
         learning_to_fly
 )
 
+if(LEARNING_TO_FLY_ENABLE_OLD_UI)
+add_executable(evaluate_actor evaluate_actor.cpp)
+target_link_libraries(
+        evaluate_actor
+        PRIVATE
+        rl_tools
+        learning_to_fly
+)
+endif()
+
 
 if(RL_TOOLS_BACKEND_ENABLE_CUDA)
     add_subdirectory(cuda)
