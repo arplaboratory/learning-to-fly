@@ -23,7 +23,7 @@ target_include_directories(learning_to_fly INTERFACE include)
 add_subdirectory(external/rl_tools)
 add_subdirectory(src)
 
-set(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS ON)
+option(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS "Enable tests" OFF)
 
 if(LEARNING_TO_FLY_IN_SECONDS_ENABLE_TESTS)
     enable_testing()
