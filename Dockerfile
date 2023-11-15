@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y cmake build-essential git libhdf5-dev l
 RUN pip3 install --upgrade pip
 RUN pip3 install tensorboard==2.12.2 six
 RUN mkdir $HOME/.ssh && ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-RUN --mount=type=ssh git clone git@github.com:arplaboratory/learning_to_fly.git
+RUN git clone https://github.com/arplaboratory/learning_to_fly.git && echo 1
 WORKDIR /learning_to_fly
-RUN --mount=type=ssh git submodule update --init -- external/rl_tools
+RUN git submodule update --init -- external/rl_tools
 RUN cd src/ui && ./get_dependencies.sh
 WORKDIR /learning_to_fly/external/rl_tools
-RUN --mount=type=ssh git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
+RUN git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
 WORKDIR /learning_to_fly
 WORKDIR /
 RUN mkdir build
