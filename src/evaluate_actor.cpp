@@ -58,6 +58,7 @@ namespace TEST_DEFINITIONS{
     constexpr TI N_ENVIRONMENTS = 100;
     constexpr T max_pos_diff = 0.6;
     constexpr T max_vel_diff = 5;
+    constexpr T time_lapse = 0.05;
 }
 
 template <typename T>
@@ -224,15 +225,18 @@ int main(int argc, char** argv) {
                 env.parameters.disturbances.random_force.std *= 2;
             }
         }
+        env.parameters.mdp.init.guidance = 0;
         for(TI env_i=0; env_i < N_ENVIRONMENTS; env_i++){
             bpt::sample_initial_state(dev, env, states[env_i], rng);
             states[env_i].position[0] *= 3;
             states[env_i].position[1] *= 3;
             states[env_i].position[2] *= 3;
-            states[env_i].position[0] += 0.01307;
-            states[env_i].position[1] += 0.1828;
-            states[env_i].position[2] += 0.0714;
+//            states[env_i].position[0] += 0.01307;
+//            states[env_i].position[1] += 0.1828;
+//            states[env_i].position[2] += 0.0714;
+            bpt::set_state(dev, uis[env_i], states[env_i]);
         }
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         std::cout << "Random force: " << states[0].force[0] << ", " << states[0].force[1] << ", " << states[0].force[2] << std::endl;
 //        bpt::initial_state(dev, env, state);
         T max_speed = 0;
@@ -285,7 +289,6 @@ int main(int argc, char** argv) {
 //            }
                 bpt::clamp(dev, action, (T)-1, (T)1);
                 T dt = bpt::step(dev, env, state, action, next_state, rng);
-                constexpr T time_lapse = 0.05;
                 bool terminated_flag = bpt::terminated(dev, env, observation_state, rng);
                 reward_acc += bpt::reward(dev, env, state, action, next_state, rng);
                 bpt::set_state(dev, ui, state, action);
