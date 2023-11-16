@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y git python3 build-essential gcc-arm-none-eabi
-RUN git clone https://github.com/arplaboratory/learning_to_fly_controller.git /controller && echo bump_1
+RUN git clone https://github.com/arplaboratory/learning_to_fly_controller.git /controller && echo bump_2
 WORKDIR /controller
 RUN git submodule update --init --recursive -- external/crazyflie_firmware
 RUN git submodule update --init -- external/rl_tools # non-recursive because we only need the headers

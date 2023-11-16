@@ -62,7 +62,7 @@ Navigate to [https://0.0.0.0:6006](https://0.0.0.0:6006) with your browser to in
 
 If you would like to benchmark the training speed you can use:
 ```
-docker run -it --rm learning_to_fly training_benchmark
+docker run -it --rm arpllab/learning_to_fly training_benchmark
 ```
 This is the fastest configuration, without logging, UI, checkpointing etc.
 ### Native installation
@@ -129,7 +129,7 @@ tensorboard --logdir=logs
 ## Deploying trained policies
 Train a policy, e.g. using the Docker image with the UI:
 ```
-docker run -it --rm -p 8000:8000 -v $(pwd)/checkpoints arpllab/learning_to_fly 
+docker run -it --rm -p 8000:8000 -v $(pwd)/checkpoints:/learning_to_fly/checkpoints arpllab/learning_to_fly 
 ```
 The checkpoints are placed in the current working directory's `checkpoints` folder. Inspect the logs of the container to find the path of the final log, e.g., `checkpoints/multirotor_td3/2023_11_16_14_46_38_d+o+a+r+h+c+f+w+e+_002/actor_000000000300000.h`. 
 We can mount this file into the container `arpllab/learning_to_fly_build_firmware` for building the firmware, e.g.: 
