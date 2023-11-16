@@ -23,8 +23,14 @@ This repository contains the code for the paper "Learning to Fly in Seconds". Th
 
 
 ## Instructions to run the code
+### Docker (isolated)
+We provide a pre-built Docker image with a simple web interface that can be executed using a single command (given that Docker is already installed on your machine):
+```
+docker run -it --rm -p 8000:8000 arpllab/learning_to_fly
+```
+After this is running navigate to [https://0.0.0.0:8000](https://0.0.0.0:8000) and start the training. Note that to make this Docker image compatible with a broad range of CPUs some optimizations have been turned off. For full speed we recommend a [Native installation](#Native-installation). 
 ### Docker installation (isolated)
-The easiest way to run the code is probably using Docker. If you want to run the code on bare metal jump [Native installation](#Native-installation).
+With the following instructions you can also easily build the Docker image yourself. If you want to run the code on bare metal jump [Native installation](#Native-installation).
 
 First, install Docker on your machine. Then move to the original directory `learning_to_fly` and build the Docker image:
 ```
