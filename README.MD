@@ -34,7 +34,7 @@ After the container is running, navigate to [https://0.0.0.0:8000](https://0.0.0
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/simulator_screenshot.png" />
 </div>
 
-Note that to make this Docker image compatible with a broad range of CPUs some optimizations have been turned off. For full speed we recommend a [Native installation](#Native-installation). 
+Note that to make this Docker image compatible with a broad range of CPUs, some optimizations have been turned off. For full speed we recommend a [Native installation](#Native-installation). 
 ### Docker installation (isolated)
 With the following instructions you can also easily build the Docker image yourself. If you want to run the code on bare metal jump [Native installation](#Native-installation).
 
