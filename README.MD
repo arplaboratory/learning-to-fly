@@ -40,7 +40,11 @@ With the following instructions you can also easily build the Docker image yours
 
 First, install Docker on your machine. Then move to the original directory `learning_to_fly` and build the Docker image:
 ```
-docker build -t learning_to_fly .
+docker build -t arpllab/learning_to_fly .
+```
+If desired you can also build the container for building the firmware:
+```
+docker build -t arpllab/learning_to_fly_build_firmware -f Dockerfile_build_firmware .
 ```
 After that you can run it using e.g.:
 ```
@@ -120,6 +124,21 @@ python3 -m pip install tensorboard
 Then from the original directory `learning_to_fly`:
 ```
 tensorboard --logdir=logs
+```
+
+## Deploying trained policies
+Train a policy, e.g. using the Docker image with the UI:
+```
+docker run -it --rm -p 8000:8000 -v $(pwd)/checkpoints arpllab/learning_to_fly 
+```
+The checkpoints are placed in the current working directory's `checkpoints` folder. Inspect the logs of the container to find the path of the final log, e.g., `checkpoints/multirotor_td3/2023_11_16_14_46_38_d+o+a+r+h+c+f+w+e+_002/actor_000000000300000.h`. 
+We can mount this file into the container `arpllab/learning_to_fly_build_firmware` for building the firmware, e.g.: 
+```
+docker run -it --rm -v $(pwd)/checkpoints/multirotor_td3/2023_11_16_14_46_38_d+o+a+r+h+c+f+w+e+_002/actor_000000000300000.h:/controller/data/actor.h:ro -v $(pwd)/build_firmware:/output arpllab/learning_to_fly_build_firmware
+```
+This should build the firmware using the newly trained policy and output the binary to `build_firmware/cf2.bin`. After that we can use the `cfclient` package to flash the firmware (find the installation instructions [here](https://www.bitcraze.io/documentation/repository/crazyflie-clients-python/master/installation/install/))
+```
+cfloader flash build_firmware/cf2.bin stm32-fw -w radio://0/80/2M
 ```
 
 ## Citing
