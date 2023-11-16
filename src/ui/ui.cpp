@@ -200,7 +200,23 @@ public:
             message["data"]["finished"] = ts.finished;
             ws_.write(net::buffer(message.dump()));
         }
+        if(ts.finished){
+            // terminate connection here
+            ws_.async_close(beast::websocket::close_code::normal,
+                            beast::bind_front_handler(
+                                    &websocket_session::on_close,
+                                    shared_from_this()));
+        }
 
+    }
+
+    void on_close(beast::error_code ec) {
+        if(ec) {
+            std::cerr << "WebSocket close failed: " << ec.message() << std::endl;
+            return;
+        }
+        ws_.next_layer().shutdown(tcp::socket::shutdown_both, ec);
+        ws_.next_layer().close(ec);
     }
 
     void on_read(beast::error_code ec, std::size_t bytes_transferred) {
