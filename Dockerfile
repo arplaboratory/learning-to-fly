@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y cmake build-essential git libhdf5-dev l
 RUN pip3 install --upgrade pip
 RUN pip3 install tensorboard==2.12.2 six
 RUN mkdir $HOME/.ssh && ssh-keyscan github.com >> $HOME/.ssh/known_hosts
-RUN git clone https://github.com/arplaboratory/learning_to_fly.git && echo 1
+RUN git clone https://github.com/arplaboratory/learning_to_fly.git && echo 6
 WORKDIR /learning_to_fly
 RUN git submodule update --init -- external/rl_tools
 RUN cd src/ui && ./get_dependencies.sh
@@ -21,7 +21,7 @@ WORKDIR /learning_to_fly
 WORKDIR /
 RUN mkdir build
 WORKDIR /build
-RUN cmake ../learning_to_fly -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON
+RUN cmake ../learning_to_fly -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON -DRL_TOOLS_DISABLE_CPU_SPECIFIC_OPTIMIZATIONS:BOOL=ON
 RUN cmake --build . -j$(nproc)
 
 WORKDIR /learning_to_fly
