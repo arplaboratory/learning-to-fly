@@ -48,7 +48,7 @@ class websocket_session : public std::enable_shared_from_this<websocket_session>
         using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
         static constexpr TI STEP_LIMIT = 300001;
         static constexpr bool DETERMINISTIC_EVALUATION = false;
-        static constexpr TI BASE_SEED = 2;
+        static constexpr TI BASE_SEED = 0;
     };
     using TI = CONFIG::TI;
 
@@ -216,11 +216,12 @@ public:
             start(10);
 
             // start thread in lambda for training of ts (passed as a reference)
-            this->t = std::thread([&](){
-                training_start = std::chrono::high_resolution_clock::now();
-                multirotor_training::operations::init(ts);
+            typename CONFIG::TI seed = message["data"]["seed"];
+            this->t = std::thread([seed, this](){
+                this->training_start = std::chrono::high_resolution_clock::now();
+                multirotor_training::operations::init(this->ts, seed);
                 for(TI step_i=0; step_i < CONFIG::STEP_LIMIT; step_i++){
-                    multirotor_training::operations::step(ts);
+                    multirotor_training::operations::step(this->ts);
                 }
                 training_end = std::chrono::high_resolution_clock::now();
                 std::cout << "Training took " << (std::chrono::duration_cast<std::chrono::milliseconds>(training_end - training_start).count())/1000 << "s" << std::endl;
@@ -441,8 +442,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Note: This executable should be executed in the context (working directory) of the main repo e.g. ./build/src/rl_environments_multirotor_ui 0.0.0.0 8000" << std::endl;
     try{
         // Check command line arguments.
-        if(argc != 3)
-        {
+        if(argc != 3){
             std::cerr << "Usage: " << argv[0] << " <address> <port> (e.g. \'0.0.0.0 8000\' for localhost 8000)\n";
             return EXIT_FAILURE;
         }

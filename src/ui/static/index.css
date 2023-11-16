@@ -111,3 +111,74 @@ td {
     padding: 0.2em 0.7em 0.2em 0.7em;
 
 }
+
+.fancy-number-input {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(to right, #6fd0cb, #7DB9B6);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    width: 70px;
+}
+
+.fancy-number-input:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fancy-number-input:focus {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fancy-number-input::placeholder {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.5);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.fancy-button {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    padding: 20px 40px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(to right, #6fd0cb, #7DB9B6);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.fancy-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fancy-button-small {
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 70%;
+}
+
+.fancy-button-small:hover {
+    transform: translateY(-2.5px);
+    box-shadow: 0 4px 7.5px rgba(0, 0, 0, 0.3);
+}
+#seed-input{
+    width: 8em;
+}

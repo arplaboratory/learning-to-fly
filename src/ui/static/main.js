@@ -76,6 +76,7 @@ window.onload = function(){
 
 
   var button = document.getElementById("button")
+  var seed_input = document.getElementById("seed-input")
   var animateButton = function(e) {
     e.preventDefault;
     //reset animation
@@ -130,7 +131,7 @@ window.onload = function(){
             if(data.finished && !window.finished){
               window.finished = true;
               document.getElementById("canvasContainer").style.display = "none"
-              document.getElementById("button").style.display = "none"
+              document.getElementById("controlContainer").style.display = "none"
               var resultContainer = document.getElementById("resultContainer")
               // resultContainer.innerHTML = "Total training time: " + Math.round(data.time) + "s"
               resultContainer.innerHTML = "Finished"
@@ -155,9 +156,13 @@ window.onload = function(){
   };
 
   button.addEventListener("click", event => {
+    seed_input.style.display = "none"
+    button.disabled = true;
     ws.send(JSON.stringify({
       "channel": "startTraining",
-      "data": null
+      "data": {
+        "seed": parseInt(seed_input.value || 0)
+      }
     }))
   }, false)
 }

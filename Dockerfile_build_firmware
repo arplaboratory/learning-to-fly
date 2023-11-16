@@ -1,13 +1,11 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y build-essential gcc-arm-none-eabi
-RUN apt-get update && apt-get install -y git
-RUN git clone https://github.com/arplaboratory/learning_to_fly_controller.git /controller
+RUN apt-get update && apt-get install -y git python3 build-essential gcc-arm-none-eabi
+RUN git clone https://github.com/arplaboratory/learning_to_fly_controller.git /controller && echo bump_1
 WORKDIR /controller
 RUN git submodule update --init --recursive -- external/crazyflie_firmware
 RUN git submodule update --init -- external/rl_tools # non-recursive because we only need the headers
 WORKDIR /controller/external/crazyflie_firmware
 RUN make cf2_defconfig
 WORKDIR /controller
-RUN apt-get update && apt-get install -y python3
 CMD ["bash", "-c", "make -j$(nproc) && cp build/cf2.bin /output/cf2.bin"]
