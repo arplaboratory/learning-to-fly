@@ -48,7 +48,7 @@ docker build -t arpllab/learning_to_fly_build_firmware -f Dockerfile_build_firmw
 ```
 After that you can run it using e.g.:
 ```
-docker run -it --rm -p 8000:8000 learning_to_fly
+docker run -it --rm -p 8000:8000 arpllab/learning_to_fly
 ```
 This will open the port `8000` for the UI of the training program and run it inside the container.
 
@@ -56,7 +56,7 @@ Navigate to [https://0.0.0.0:8000](https://0.0.0.0:8000) with your browser, and 
 
 The training UI configuration does not log data by default. If you want to inspect the training data run:
 ```
-docker run -it --rm -p 6006:6006 learning_to_fly training_headless
+docker run -it --rm -p 6006:6006 arpllab/learning_to_fly training_headless
 ```
 Navigate to [https://0.0.0.0:6006](https://0.0.0.0:6006) with your browser to investigate the Tensorboard logs.
 

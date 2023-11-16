@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 EXPOSE 8000
 EXPOSE 6006
 ENV DEBIAN_FRONTEND=noninteractive
@@ -8,8 +8,7 @@ RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRO
 RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | tee /etc/apt/sources.list.d/oneAPI.list
 RUN apt-get update && apt-get install -y intel-oneapi-mkl-devel-2023.1.0
 RUN apt-get update && apt-get install -y cmake build-essential git libhdf5-dev libboost-all-dev protobuf-compiler libprotobuf-dev python3 python3-pip
-RUN pip3 install --upgrade pip
-RUN pip3 install tensorboard==2.12.2 six
+RUN pip3 install --upgrade pip && pip3 install tensorboard==2.12.2 six
 RUN mkdir $HOME/.ssh && ssh-keyscan github.com >> $HOME/.ssh/known_hosts
 RUN git clone https://github.com/arplaboratory/learning_to_fly.git && echo 7
 WORKDIR /learning_to_fly
