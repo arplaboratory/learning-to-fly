@@ -28,7 +28,13 @@ We provide a pre-built Docker image with a simple web interface that can be exec
 ```
 docker run -it --rm -p 8000:8000 arpllab/learning_to_fly
 ```
-After this is running navigate to [https://0.0.0.0:8000](https://0.0.0.0:8000) and start the training. Note that to make this Docker image compatible with a broad range of CPUs some optimizations have been turned off. For full speed we recommend a [Native installation](#Native-installation). 
+After the container is running, navigate to [https://0.0.0.0:8000](https://0.0.0.0:8000) and you should see something like (after starting the training):
+
+<div align="center">
+<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/simulator_screenshot.png" />
+</div>
+
+Note that to make this Docker image compatible with a broad range of CPUs some optimizations have been turned off. For full speed we recommend a [Native installation](#Native-installation). 
 ### Docker installation (isolated)
 With the following instructions you can also easily build the Docker image yourself. If you want to run the code on bare metal jump [Native installation](#Native-installation).
 
@@ -42,17 +48,13 @@ docker run -it --rm -p 8000:8000 learning_to_fly
 ```
 This will open the port `8000` for the UI of the training program and run it inside the container.
 
-Navigate to "http://localhost:8000" with your browser, and you should see something like (after starting the training):
-
-<div align="center">
-<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/simulator_screenshot.png" />
-</div>
+Navigate to [https://0.0.0.0:8000](https://0.0.0.0:8000) with your browser, and you should see something like in the screenshot above (after starting the training).
 
 The training UI configuration does not log data by default. If you want to inspect the training data run:
 ```
 docker run -it --rm -p 6006:6006 learning_to_fly training_headless
 ```
-Navigate to "http://localhost:6006" with your browser to investigate the Tensorboard logs.
+Navigate to [https://0.0.0.0:6006](https://0.0.0.0:6006) with your browser to investigate the Tensorboard logs.
 
 If you would like to benchmark the training speed you can use:
 ```
