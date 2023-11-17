@@ -7,14 +7,8 @@
 
 namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
-//#ifdef BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MUJOCO_ANT_EVALUATE_ACTOR_PPO
-//#include "ppo/parameters.h"
-//#else
 #include "parameters_training.h"
-//#elifdef BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MUJOCO_ANT_EVALUATE_ACTOR_SEQUENTIAL
 #include "training.h"
-
-//#endif
 
 #include <chrono>
 #include <iostream>
@@ -45,7 +39,6 @@ namespace TEST_DEFINITIONS{
     using ENVIRONMENT = penv::ENVIRONMENT;
     using UI = bpt::rl::environments::multirotor::UI<ENVIRONMENT>;
 
-//    using prl = parameter_set::rl<T, TI, penv::ENVIRONMENT>;
     constexpr bool TRAJECTORY_TRACKING = false;
     constexpr TI MAX_EPISODE_LENGTH = TRAJECTORY_TRACKING ? 3000 : 600;
     constexpr bool SAME_CONFIG_AS_IN_TRAINING = false;
@@ -73,10 +66,6 @@ void trajectory(T t, T position[3], T velocity[3]){
     velocity[0] = cosf(2*(progress*2*M_PI + M_PI / 2)) / 2.0f * speed * 4 * M_PI;
     position[2] = 0;
     velocity[2] = 0;
-//    cosf(progress*2*M_PI + M_PI / 2) * figure_eight_scale
-//    -sinf(progress*2*M_PI + M_PI / 2) * speed * 2 * M_PI
-//    sinf(2*(progress*2*M_PI + M_PI / 2)) / 2.0f * figure_eight_scale
-//    cosf(2*(progress*2*M_PI + M_PI / 2)) / 2.0f * speed * 4 * M_PI
 }
 
 
@@ -120,11 +109,7 @@ int main(int argc, char** argv) {
     while(true){
         std::filesystem::path actor_run;
         if(run == "" && checkpoint == ""){
-#ifdef BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MUJOCO_ANT_EVALUATE_ACTOR_PPO
-            std::filesystem::path actor_checkpoints_dir = std::filesystem::path("checkpoints") / "multirotor_ppo";
-#else
             std::filesystem::path actor_checkpoints_dir = std::filesystem::path("checkpoints") / "multirotor_td3";
-#endif
             std::vector<std::filesystem::path> actor_runs;
 
             for (const auto& run : std::filesystem::directory_iterator(actor_checkpoints_dir)) {
@@ -156,10 +141,6 @@ int main(int argc, char** argv) {
             try{
                 auto data_file = HighFive::File(checkpoint, HighFive::File::ReadOnly);
                 bpt::load(dev, actor, data_file.getGroup("actor"));
-#ifdef BACKPROP_TOOLS_TEST_RL_ENVIRONMENTS_MUJOCO_ANT_EVALUATE_ACTOR_PPO
-                bpt::load(dev, observation_normalizer.mean, data_file.getGroup("observation_normalizer"), "mean");
-                bpt::load(dev, observation_normalizer.std, data_file.getGroup("observation_normalizer"), "std");
-#endif
             }
             catch(HighFive::FileException& e){
                 std::cout << "Failed to load actor from " << checkpoint << std::endl;
@@ -178,7 +159,6 @@ int main(int argc, char** argv) {
         env.parameters = penv::parameters;
         if(!SAME_CONFIG_AS_IN_TRAINING && INIT_SIMPLE){
             env.parameters.mdp.init = bpt::rl::environments::multirotor::parameters::init::simple<T, TI, 4, penv::REWARD_FUNCTION>;
-//            env.parameters.mdp.init = bpt::rl::environments::multirotor::parameters::init::orientation_bigger_angle<T, TI, 4, penv::REWARD_FUNCTION>;
         }
         if(!SAME_CONFIG_AS_IN_TRAINING && DEACTIVATE_OBSERVATION_NOISE){
             env.parameters.mdp.observation_noise.position = 0;
@@ -228,17 +208,13 @@ int main(int argc, char** argv) {
         env.parameters.mdp.init.guidance = 0;
         for(TI env_i=0; env_i < N_ENVIRONMENTS; env_i++){
             bpt::sample_initial_state(dev, env, states[env_i], rng);
-            states[env_i].position[0] *= 3;
-            states[env_i].position[1] *= 3;
-            states[env_i].position[2] *= 3;
-//            states[env_i].position[0] += 0.01307;
-//            states[env_i].position[1] += 0.1828;
-//            states[env_i].position[2] += 0.0714;
+//            states[env_i].position[0] *= 3;
+//            states[env_i].position[1] *= 3;
+//            states[env_i].position[2] *= 3;
             bpt::set_state(dev, uis[env_i], states[env_i]);
         }
         std::this_thread::sleep_for(std::chrono::seconds(10));
         std::cout << "Random force: " << states[0].force[0] << ", " << states[0].force[1] << ", " << states[0].force[2] << std::endl;
-//        bpt::initial_state(dev, env, state);
         T max_speed = 0;
         constexpr TI TRACKING_START_STEP = 100;
 
@@ -284,9 +260,6 @@ int main(int argc, char** argv) {
                 }
                 bpt::observe(dev, env, observation_state_clamped, observation, rng);
                 bpt::evaluate(dev, actor, observation, action, actor_buffer);
-//            for(TI action_i = 0; action_i < penv::ENVIRONMENT::ACTION_DIM; action_i++){
-//                increment(action, 0, action_i, bpt::random::normal_distribution(DEVICE::SPEC::RANDOM(), (T)0, (T)(T)prl::OFF_POLICY_RUNNER_PARAMETERS::EXPLORATION_NOISE, rng));
-//            }
                 bpt::clamp(dev, action, (T)-1, (T)1);
                 T dt = bpt::step(dev, env, state, action, next_state, rng);
                 bool terminated_flag = bpt::terminated(dev, env, observation_state, rng);
