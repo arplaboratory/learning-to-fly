@@ -30,21 +30,6 @@ namespace parameters{
             template<typename T, typename TI, typename T_ABLATION_SPEC>
             struct environment {
                 using ABLATION_SPEC = T_ABLATION_SPEC;
-                //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold_4<T>;
-                //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_mm<T, TI>;
-                //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::sq_exp_position_action_only_3<T>;
-                //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::sq_exp_reward_mm<T, TI>;
-//                static constexpr auto reward_function = ABLATION_SPEC::USE_INITIAL_REWARD_FUNCTION ?
-//                                                        rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_position_only_torque<T>
-//                                                                                                   :
-//                                                        rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_position_only_torque_curriculum_target<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_263<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_fast_learning<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_absolute_fast_learning<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_absolute_fast_learning_2<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::abs_exp_position_only<T>;
-//                static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::abs_exp_position_orientation_lin_vel<T>;
                 static constexpr auto initial_reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_position_only_torque<T>;
                 static constexpr auto target_reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_position_only_torque_curriculum_target<T>;
                 static constexpr auto reward_function = ABLATION_SPEC::USE_INITIAL_REWARD_FUNCTION ? initial_reward_function : target_reward_function;
@@ -59,17 +44,13 @@ namespace parameters{
                 static constexpr auto init_params = ABLATION_SPEC::INIT_NORMAL ?
                                                     rl_tools::rl::environments::multirotor::parameters::init::orientation_biggest_angle<T, TI, 4, REWARD_FUNCTION>
                                                                                :
-//                                                    rl_tools::rl::environments::multirotor::parameters::init::orientation_small_angle<T, TI, 4, REWARD_FUNCTION>;
                                                     rl_tools::rl::environments::multirotor::parameters::init::all_positions<T, TI, 4, REWARD_FUNCTION>;
 
                 static constexpr PARAMETERS_TYPE parameters = {
                         rl_tools::rl::environments::multirotor::parameters::dynamics::crazy_flie_old_reduced_inertia<T, TI, REWARD_FUNCTION>,
                         {0.01}, // integration dt
                         {
-                                //                        rl_tools::rl::environments::multirotor::parameters::init::all_around_orientation_only<T, TI, 4, REWARD_FUNCTION>,
                                 init_params,
-                                //                        rl_tools::rl::environments::multirotor::parameters::init::orientation_all_around<T, TI, 4, REWARD_FUNCTION>,
-                                //                        rl_tools::rl::environments::multirotor::parameters::init::simple<T, TI, 4, REWARD_FUNCTION>,
                                 reward_function,
                                 {   // Observation noise
                                         0.001 * ABLATION_SPEC::OBSERVATION_NOISE, // position
@@ -83,11 +64,8 @@ namespace parameters{
                                 rl_tools::rl::environments::multirotor::parameters::termination::fast_learning<T, TI, 4, REWARD_FUNCTION>
                         },
                         typename PARAMETERS_TYPE::Disturbances{
-                                typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0.027 * 9.81 / 20 *
-                                                                                              ABLATION_SPEC::DISTURBANCE}, // random_force;
-                                //                        typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0} // random_force;
-                                typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0.027 * 9.81 / 10000 *
-                                                                                              ABLATION_SPEC::DISTURBANCE} // random_torque;
+                                typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0.027 * 9.81 / 20 * ABLATION_SPEC::DISTURBANCE}, // random_force;
+                                typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0.027 * 9.81 / 10000 * ABLATION_SPEC::DISTURBANCE} // random_torque;
                         }
 
                 };
@@ -139,56 +117,6 @@ namespace parameters{
         template<typename T, typename TI, typename ABLATION_SPEC>
         using environment = builder::environment<T, TI, ABLATION_SPEC>;
     }
-
-//    namespace fast_learning{
-//        template<typename T, typename TI>
-//        struct environment{
-//            static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_old_but_gold<T>;
-//            //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_mm<T, TI>;
-//            //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_2<T>;
-//            //        static constexpr auto reward_function = rl_tools::rl::environments::multirotor::parameters::reward_functions::reward_squared_4<T>;
-//            using REWARD_FUNCTION_CONST = typename rl_tools::utils::typing::remove_cv_t<decltype(reward_function)>;
-//            using REWARD_FUNCTION = typename rl_tools::utils::typing::remove_cv<REWARD_FUNCTION_CONST>::type;
-//
-//            using PARAMETERS_TYPE = rl_tools::rl::environments::multirotor::ParametersDisturbances<T, TI, 4, REWARD_FUNCTION>;
-//            static constexpr PARAMETERS_TYPE parameters = {
-//                    rl_tools::rl::environments::multirotor::parameters::dynamics::crazy_flie_old<T, TI, REWARD_FUNCTION>,
-//                    {0.01}, // integration dt
-//                    {
-//                            rl_tools::rl::environments::multirotor::parameters::init::all_around<T, TI, 4, REWARD_FUNCTION>,
-//                            reward_function,
-//                            {   // Observation noise
-//                                    0, // position
-//                                    0, // orientation
-//                                    0, // linear_velocity
-//                                    0, // angular_velocity
-//                            },
-//                            {   // Action noise
-//                                    0, // std of additive gaussian noise onto the normalized action (-1, 1)
-//                            },
-//                            //                        rl_tools::rl::environments::multirotor::parameters::init::all_around_simplified<T, TI, 4, REWARD_FUNCTION>,
-//                            //                        rl_tools::rl::environments::multirotor::parameters::init::simple<T, TI, 4, REWARD_FUNCTION>,
-//                            rl_tools::rl::environments::multirotor::parameters::termination::fast_learning<T, TI, 4, REWARD_FUNCTION>
-//                    },
-//                    typename PARAMETERS_TYPE::Disturbances{
-//                            typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0.027 * 9.81 / 10}, // random_force;
-//                            typename PARAMETERS_TYPE::Disturbances::UnivariateGaussian{0, 0} // random_torque;
-//                    }
-//            };
-//
-//            using PARAMETERS = typename rl_tools::utils::typing::remove_cv_t<decltype(parameters)>;
-//
-//            struct ENVIRONMENT_STATIC_PARAMETERS: bpt::rl::environments::multirotor::StaticParametersDefault<TI>{
-//                static constexpr bool ENFORCE_POSITIVE_QUATERNION = false;
-//                static constexpr bool RANDOMIZE_QUATERNION_SIGN = false;
-//                static constexpr bpt::rl::environments::multirotor::StateType STATE_TYPE = bpt::rl::environments::multirotor::StateType::Base;
-//                static constexpr bpt::rl::environments::multirotor::ObservationType OBSERVATION_TYPE = bpt::rl::environments::multirotor::ObservationType::Normal;
-//            };
-//
-//            using ENVIRONMENT_SPEC = bpt::rl::environments::multirotor::Specification<T, TI, PARAMETERS, ENVIRONMENT_STATIC_PARAMETERS>;
-//            using ENVIRONMENT = bpt::rl::environments::Multirotor<ENVIRONMENT_SPEC>;
-//        };
-//    }
 }
 
 #endif
