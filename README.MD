@@ -68,7 +68,7 @@ This is the fastest configuration, without logging, UI, checkpointing etc.
 ### Native installation
 Clone this repository:
 ```
-git clone https://github.com/arplaboratory/learning_to_fly
+git clone https://github.com/arplaboratory/learning-to-fly learning_to_fly
 cd learning_to_fly
 ```
 Then instantiate the `RLtools` submodule:
