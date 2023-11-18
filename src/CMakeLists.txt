@@ -28,6 +28,7 @@ target_link_libraries(
 )
 target_compile_definitions(training_benchmark PRIVATE LEARNING_TO_FLY_IN_SECONDS_BENCHMARK)
 
+if(RL_TOOLS_ENABLE_HDF5)
 add_executable(ablation_study ablation_study.cpp)
 target_link_libraries(
         ablation_study
@@ -35,6 +36,7 @@ target_link_libraries(
         rl_tools
         learning_to_fly
 )
+endif()
 
 if(LEARNING_TO_FLY_ENABLE_OLD_UI)
 add_executable(evaluate_actor evaluate_actor.cpp)

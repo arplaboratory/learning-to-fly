@@ -8,10 +8,13 @@
 
 #include <rl_tools/rl/algorithms/td3/loop.h>
 
+
+#ifdef RL_TOOLS_ENABLE_HDF5
 #include <rl_tools/containers/persist.h>
 #include <rl_tools/nn/parameters/persist.h>
 #include <rl_tools/nn/layers/dense/persist.h>
 #include <rl_tools/nn_models/sequential/persist.h>
+#endif
 
 #include <rl_tools/containers/persist_code.h>
 #include <rl_tools/nn/parameters/persist_code.h>
@@ -28,6 +31,8 @@ namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 #include <vector>
 #include <queue>
 #include <mutex>
+#include <filesystem>
+#include <fstream>
 
 
 namespace multirotor_training{
@@ -66,7 +71,11 @@ namespace multirotor_training{
             static constexpr bool BENCHMARK = false;
 #endif
             using ABLATION_SPEC = T_ABLATION_SPEC;
+#ifdef RL_TOOLS_ENABLE_TENSORBOARD
             using LOGGER = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::logging::CPU , bpt::devices::logging::CPU_TENSORBOARD<bpt::devices::logging::CPU_TENSORBOARD_FREQUENCY_EXTENSION>>;
+#else
+            using LOGGER = bpt::devices::logging::CPU;
+#endif
             using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, LOGGER>;
 //    using DEVICE = bpt::devices::CPU<DEV_SPEC>;
             using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
