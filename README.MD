@@ -126,7 +126,7 @@ Then from the original directory `learning_to_fly`:
 tensorboard --logdir=logs
 ```
 
-## Deploying trained policies
+## Deploying trained policies on a Crazyflie
 Train a policy, e.g. using the Docker image with the UI:
 ```
 docker run -it --rm -p 8000:8000 -v $(pwd)/checkpoints:/learning_to_fly/checkpoints arpllab/learning_to_fly 
