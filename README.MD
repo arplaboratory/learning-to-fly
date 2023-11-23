@@ -86,7 +86,7 @@ git submodule update --init -- external/cli11 external/highfive external/json/ e
 ```
 sudo apt update && sudo apt install libhdf5-dev libopenblas-dev protobuf-compiler libprotobuf-dev libboost-all-dev
 ```
-As an alternative to openblas you can also install [Intel MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) which in our experience is faster than OpenBLAS.
+As an alternative to openblas you can also install [Intel MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) which in our experience is significantly faster than OpenBLAS.
 #### Install dependencies on macOS
 ```
 brew install hdf5 protobuf boost
