@@ -41,23 +41,9 @@ namespace learning_to_fly{
         }
         ts.env_eval.parameters = env_parameters_eval;
         TI effective_seed = CONFIG::BASE_SEED + seed;
-        {
-            std::stringstream run_name_ss;
-            run_name_ss << "";
-            auto now = std::chrono::system_clock::now();
-            auto local_time = std::chrono::system_clock::to_time_t(now);
-            std::tm* tm = std::localtime(&local_time);
-            run_name_ss << "" << std::put_time(tm, "%Y_%m_%d_%H_%M_%S");
-            if constexpr(CONFIG::BENCHMARK){
-                run_name_ss << "_BENCHMARK";
-            }
-            run_name_ss << "_" << helpers::ablation_name<ABLATION_SPEC>();
-            run_name_ss << "_" << std::setw(3) << std::setfill('0') << effective_seed;
-            ts.run_name = run_name_ss.str();
-        }
-        {
-            rlt::construct(ts.device, ts.device.logger, std::string("logs"), ts.run_name);
-        }
+        ts.run_name = helpers::run_name<ABLATION_SPEC, CONFIG>(effective_seed);
+        rlt::construct(ts.device, ts.device.logger, std::string("logs"), ts.run_name);
+
         rlt::set_step(ts.device, ts.device.logger, 0);
         rlt::add_scalar(ts.device, ts.device.logger, "loop/seed", effective_seed);
         rlt::rl::algorithms::td3::loop::init(ts, effective_seed);
