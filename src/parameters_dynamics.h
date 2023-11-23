@@ -47,7 +47,7 @@ namespace parameters{
                                                     rl_tools::rl::environments::multirotor::parameters::init::all_positions<T, TI, 4, REWARD_FUNCTION>;
 
                 static constexpr PARAMETERS_TYPE parameters = {
-                        rl_tools::rl::environments::multirotor::parameters::dynamics::crazy_flie_old_reduced_inertia<T, TI, REWARD_FUNCTION>,
+                        rl_tools::rl::environments::multirotor::parameters::dynamics::crazy_flie<T, TI, REWARD_FUNCTION>,
                         {0.01}, // integration dt
                         {
                                 init_params,

@@ -77,7 +77,6 @@ namespace multirotor_training{
             using LOGGER = bpt::devices::logging::CPU;
 #endif
             using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, LOGGER>;
-//    using DEVICE = bpt::devices::CPU<DEV_SPEC>;
             using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
             using T = float;
             using TI = typename DEVICE::index_t;
