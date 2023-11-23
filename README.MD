@@ -126,6 +126,24 @@ Then from the original directory `learning_to_fly`:
 tensorboard --logdir=logs
 ```
 
+To run the training with the UI, we download the JavaScript dependencies in the form of the two files `three.module.js` and `OrbitControls.js`:
+```
+cd src/ui
+./get_dependencies.sh
+```
+
+After that we can execute the UI binary from the root folder:
+```
+cd ../../
+./build/src/ui 0.0.0.0 8000
+```
+Now you should be able to navigate to [http://0.0.0.0:8000](http://0.0.0.0:8000) in your browser and start the training.
+
+To run the benchmark (with UI, checkpointing and Tensorboard logging turned off):
+```
+sudo nice -n -20 ./buidld/src/training_benchmark
+```
+
 ## Deploying trained policies on a Crazyflie
 Train a policy, e.g. using the Docker image with the UI:
 ```
