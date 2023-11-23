@@ -401,6 +401,7 @@ private:
                 response_.result(http::status::not_found);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "File not found\r\n";
+                std::cout << "File not found: " << path << " (you might need to run \"get_dependencies.sh\" to download the UI dependencies into the static folder)" << std::endl;
             }
 
 //            response_.result(http::status::not_found);
