@@ -141,7 +141,7 @@ Now you should be able to navigate to [http://0.0.0.0:8000](http://0.0.0.0:8000)
 
 To run the benchmark (with UI, checkpointing and Tensorboard logging turned off):
 ```
-sudo nice -n -20 ./buidld/src/training_benchmark
+sudo nice -n -20 ./build/src/training_benchmark
 ```
 
 ## Deploying trained policies on a Crazyflie
