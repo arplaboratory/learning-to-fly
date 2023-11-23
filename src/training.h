@@ -1,15 +1,14 @@
 #include <rl_tools/operations/cpu_mux.h>
 #include <rl_tools/nn/operations_cpu_mux.h>
+namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include <learning_to_fly/simulator/operations_cpu.h>
 #include <learning_to_fly/simulator/metrics.h>
 
-#include <rl_tools/nn_models/sequential/operations_generic.h>
+#include "config/config.h"
 
 #include <rl_tools/rl/algorithms/td3/loop.h>
-namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
-#include "config.h"
 
 #include "training_state.h"
 
@@ -25,6 +24,7 @@ namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include <filesystem>
 #include <fstream>
+
 
 namespace learning_to_fly{
 
