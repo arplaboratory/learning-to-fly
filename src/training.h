@@ -7,7 +7,7 @@
 #include <rl_tools/nn_models/sequential/operations_generic.h>
 
 #include <rl_tools/rl/algorithms/td3/loop.h>
-namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
+namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include "config.h"
 
@@ -23,15 +23,8 @@ namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include "helpers.h"
 
-
-
-
-
-#include <vector>
-#include <mutex>
 #include <filesystem>
 #include <fstream>
-
 
 namespace learning_to_fly{
 
@@ -63,18 +56,18 @@ namespace learning_to_fly{
             ts.run_name = run_name_ss.str();
         }
         {
-            bpt::construct(ts.device, ts.device.logger, std::string("logs"), ts.run_name);
+            rlt::construct(ts.device, ts.device.logger, std::string("logs"), ts.run_name);
         }
-        bpt::set_step(ts.device, ts.device.logger, 0);
-        bpt::add_scalar(ts.device, ts.device.logger, "loop/seed", effective_seed);
-        bpt::rl::algorithms::td3::loop::init(ts, effective_seed);
+        rlt::set_step(ts.device, ts.device.logger, 0);
+        rlt::add_scalar(ts.device, ts.device.logger, "loop/seed", effective_seed);
+        rlt::rl::algorithms::td3::loop::init(ts, effective_seed);
         ts.off_policy_runner.parameters = CONFIG::off_policy_runner_parameters;
 
         for(typename CONFIG::ENVIRONMENT& env: ts.validation_envs){
             env.parameters = parameters::environment<typename CONFIG::T, TI, ABLATION_SPEC>::parameters;
         }
-        bpt::malloc(ts.device, ts.validation_actor_buffers);
-        bpt::init(ts.device, ts.task, ts.validation_envs, ts.rng_eval);
+        rlt::malloc(ts.device, ts.validation_actor_buffers);
+        rlt::init(ts.device, ts.task, ts.validation_envs, ts.rng_eval);
 
         // info
 
@@ -95,13 +88,13 @@ namespace learning_to_fly{
         steps::checkpoint(ts);
         steps::validation(ts);
         steps::curriculum(ts);
-        bpt::rl::algorithms::td3::loop::step(ts);
+        rlt::rl::algorithms::td3::loop::step(ts);
         steps::trajectory_collection(ts);
     }
     template <typename CONFIG>
     void destroy(TrainingState<CONFIG>& ts){
-        bpt::rl::algorithms::td3::loop::destroy(ts);
-        bpt::destroy(ts.device, ts.task);
-        bpt::free(ts.device, ts.validation_actor_buffers);
+        rlt::rl::algorithms::td3::loop::destroy(ts);
+        rlt::destroy(ts.device, ts.task);
+        rlt::free(ts.device, ts.validation_actor_buffers);
     }
 }

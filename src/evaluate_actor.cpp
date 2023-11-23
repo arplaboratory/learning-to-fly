@@ -5,7 +5,7 @@
 #include <rl_tools/nn_models/operations_cpu.h>
 #include <rl_tools/nn_models/persist.h>
 
-namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
+namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include "parameters_training.h"
 #include "training.h"
@@ -19,7 +19,7 @@ namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 #include <CLI/CLI.hpp>
 
 namespace TEST_DEFINITIONS{
-    using DEVICE = bpt::devices::DefaultCPU;
+    using DEVICE = rlt::devices::DefaultCPU;
     using T = float;
     using TI = typename DEVICE::index_t;
     namespace parameter_set = parameters_0;
@@ -33,11 +33,11 @@ namespace TEST_DEFINITIONS{
         static constexpr bool INIT_NORMAL = true;
     };
     using EVAL_SPEC = SpecEval<parameters::DefaultAblationSpec>;
-    using CONFIG = multirotor_training::config::Config<EVAL_SPEC>;
+    using CONFIG = learning_to_fly::config::Config<EVAL_SPEC>;
 
     using penv = parameter_set::environment<T, TI, EVAL_SPEC>;
     using ENVIRONMENT = penv::ENVIRONMENT;
-    using UI = bpt::rl::environments::multirotor::UI<ENVIRONMENT>;
+    using UI = rlt::rl::environments::multirotor::UI<ENVIRONMENT>;
 
     constexpr bool TRAJECTORY_TRACKING = false;
     constexpr TI MAX_EPISODE_LENGTH = TRAJECTORY_TRACKING ? 3000 : 600;
@@ -85,23 +85,23 @@ int main(int argc, char** argv) {
     UI uis[N_ENVIRONMENTS];
     typename CONFIG::ACTOR_TYPE actor;
     typename CONFIG::ACTOR_TYPE::template DoubleBuffer<1> actor_buffer;
-    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, ENVIRONMENT::ACTION_DIM>> action;
-    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, ENVIRONMENT::OBSERVATION_DIM>> observation;
+    rlt::MatrixDynamic<rlt::matrix::Specification<T, TI, 1, ENVIRONMENT::ACTION_DIM>> action;
+    rlt::MatrixDynamic<rlt::matrix::Specification<T, TI, 1, ENVIRONMENT::OBSERVATION_DIM>> observation;
     typename ENVIRONMENT::State states[N_ENVIRONMENTS], target_states[N_ENVIRONMENTS], observation_states[N_ENVIRONMENTS], observation_states_clamped[N_ENVIRONMENTS], next_states[N_ENVIRONMENTS];
-    auto rng = bpt::random::default_engine(DEVICE::SPEC::RANDOM(), 10);
+    auto rng = rlt::random::default_engine(DEVICE::SPEC::RANDOM(), 10);
 
-    bpt::malloc(dev, env);
-    bpt::malloc(dev, actor);
-    bpt::malloc(dev, actor_buffer);
-    bpt::malloc(dev, action);
-    bpt::malloc(dev, observation);
+    rlt::malloc(dev, env);
+    rlt::malloc(dev, actor);
+    rlt::malloc(dev, actor_buffer);
+    rlt::malloc(dev, action);
+    rlt::malloc(dev, observation);
 
     for(TI env_i=0; env_i < N_ENVIRONMENTS; env_i++){
         auto& ui = uis[env_i];
         ui.host = "localhost";
         ui.port = "8080";
         ui.id = env_i;
-        bpt::init(dev, env, ui);
+        rlt::init(dev, env, ui);
     }
     DEVICE::index_t episode_i = 0;
     std::string run = arg_run;
@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         {
             try{
                 auto data_file = HighFive::File(checkpoint, HighFive::File::ReadOnly);
-                bpt::load(dev, actor, data_file.getGroup("actor"));
+                rlt::load(dev, actor, data_file.getGroup("actor"));
             }
             catch(HighFive::FileException& e){
                 std::cout << "Failed to load actor from " << checkpoint << std::endl;
@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
         T reward_acc = 0;
         env.parameters = penv::parameters;
         if(!SAME_CONFIG_AS_IN_TRAINING && INIT_SIMPLE){
-            env.parameters.mdp.init = bpt::rl::environments::multirotor::parameters::init::simple<T, TI, 4, penv::REWARD_FUNCTION>;
+            env.parameters.mdp.init = rlt::rl::environments::multirotor::parameters::init::simple<T, TI, 4, penv::REWARD_FUNCTION>;
         }
         if(!SAME_CONFIG_AS_IN_TRAINING && DEACTIVATE_OBSERVATION_NOISE){
             env.parameters.mdp.observation_noise.position = 0;
@@ -167,13 +167,13 @@ int main(int argc, char** argv) {
             env.parameters.mdp.observation_noise.angular_velocity = 0;
         }
         if(!SAME_CONFIG_AS_IN_TRAINING && RANDOMIZE_DOMAIN_PARAMETERS && episode_i % 2 == 0){
-//            T mass_factor = bpt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.5, (T)1.5, rng);
-//            T J_factor = bpt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.5, (T)5.0, rng);
-//            T max_rpm_factor = bpt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.8, (T)1.2, rng);
+//            T mass_factor = rlt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.5, (T)1.5, rng);
+//            T J_factor = rlt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.5, (T)5.0, rng);
+//            T max_rpm_factor = rlt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)0.8, (T)1.2, rng);
             T mass_factor = 1;
             T J_factor = 1;
             T max_rpm_factor = 1;
-//            T rpm_time_constant_factor = bpt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)1.0, (T)2, rng);
+//            T rpm_time_constant_factor = rlt::random::uniform_real_distribution(DEVICE::SPEC::RANDOM(), (T)1.0, (T)2, rng);
             T rpm_time_constant_factor = 1;
             std::cout << "Randomizing domain parameters" << std::endl;
             std::cout << "Mass factor: " << mass_factor << std::endl;
@@ -207,11 +207,11 @@ int main(int argc, char** argv) {
         }
         env.parameters.mdp.init.guidance = 0;
         for(TI env_i=0; env_i < N_ENVIRONMENTS; env_i++){
-            bpt::sample_initial_state(dev, env, states[env_i], rng);
+            rlt::sample_initial_state(dev, env, states[env_i], rng);
 //            states[env_i].position[0] *= 3;
 //            states[env_i].position[1] *= 3;
 //            states[env_i].position[2] *= 3;
-            bpt::set_state(dev, uis[env_i], states[env_i]);
+            rlt::set_state(dev, uis[env_i], states[env_i]);
         }
         std::this_thread::sleep_for(std::chrono::seconds(10));
         std::cout << "Random force: " << states[0].force[0] << ", " << states[0].force[1] << ", " << states[0].force[2] << std::endl;
@@ -237,34 +237,34 @@ int main(int argc, char** argv) {
                     observation_state.position[0] = state.position[0] - target_state.position[0];
                     observation_state.position[1] = state.position[1] - target_state.position[1];
                     observation_state.position[2] = state.position[2] - target_state.position[2];
-                    observation_state_clamped.position[0] = bpt::math::clamp(dev.math, observation_state.position[0], -max_pos_diff, max_pos_diff);
-                    observation_state_clamped.position[1] = bpt::math::clamp(dev.math, observation_state.position[1], -max_pos_diff, max_pos_diff);
-                    observation_state_clamped.position[2] = bpt::math::clamp(dev.math, observation_state.position[2], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[0] = rlt::math::clamp(dev.math, observation_state.position[0], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[1] = rlt::math::clamp(dev.math, observation_state.position[1], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[2] = rlt::math::clamp(dev.math, observation_state.position[2], -max_pos_diff, max_pos_diff);
 
                     observation_state.linear_velocity[0] = state.linear_velocity[0] - target_state.linear_velocity[0];
                     observation_state.linear_velocity[1] = state.linear_velocity[1] - target_state.linear_velocity[1];
                     observation_state.linear_velocity[2] = state.linear_velocity[2] - target_state.linear_velocity[2];
-                    observation_state_clamped.linear_velocity[0] = bpt::math::clamp(dev.math, observation_state.linear_velocity[0], -max_vel_diff, max_vel_diff);
-                    observation_state_clamped.linear_velocity[1] = bpt::math::clamp(dev.math, observation_state.linear_velocity[1], -max_vel_diff, max_vel_diff);
-                    observation_state_clamped.linear_velocity[2] = bpt::math::clamp(dev.math, observation_state.linear_velocity[2], -max_vel_diff, max_vel_diff);
+                    observation_state_clamped.linear_velocity[0] = rlt::math::clamp(dev.math, observation_state.linear_velocity[0], -max_vel_diff, max_vel_diff);
+                    observation_state_clamped.linear_velocity[1] = rlt::math::clamp(dev.math, observation_state.linear_velocity[1], -max_vel_diff, max_vel_diff);
+                    observation_state_clamped.linear_velocity[2] = rlt::math::clamp(dev.math, observation_state.linear_velocity[2], -max_vel_diff, max_vel_diff);
 
-                    tracking_error += bpt::math::sqrt(dev.math, observation_state.position[0] * observation_state.position[0] + observation_state.position[1] * observation_state.position[1]); // + observation_state.position[2] * observation_state.position[2]);
+                    tracking_error += rlt::math::sqrt(dev.math, observation_state.position[0] * observation_state.position[0] + observation_state.position[1] * observation_state.position[1]); // + observation_state.position[2] * observation_state.position[2]);
                     std::cout << "Tracking error: " << tracking_error/(step_i - TRACKING_START_STEP + 1) << std::endl;
                 }
                 else{
                     observation_state = state;
-                    observation_state_clamped.position[0] = bpt::math::clamp(dev.math, observation_state.position[0], -max_pos_diff, max_pos_diff);
-                    observation_state_clamped.position[1] = bpt::math::clamp(dev.math, observation_state.position[1], -max_pos_diff, max_pos_diff);
-                    observation_state_clamped.position[2] = bpt::math::clamp(dev.math, observation_state.position[2], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[0] = rlt::math::clamp(dev.math, observation_state.position[0], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[1] = rlt::math::clamp(dev.math, observation_state.position[1], -max_pos_diff, max_pos_diff);
+                    observation_state_clamped.position[2] = rlt::math::clamp(dev.math, observation_state.position[2], -max_pos_diff, max_pos_diff);
                     observation_state_clamped = state;
                 }
-                bpt::observe(dev, env, observation_state_clamped, observation, rng);
-                bpt::evaluate(dev, actor, observation, action, actor_buffer);
-                bpt::clamp(dev, action, (T)-1, (T)1);
-                T dt = bpt::step(dev, env, state, action, next_state, rng);
-                bool terminated_flag = bpt::terminated(dev, env, observation_state, rng);
-                reward_acc += bpt::reward(dev, env, state, action, next_state, rng);
-                bpt::set_state(dev, ui, state, action);
+                rlt::observe(dev, env, observation_state_clamped, observation, rng);
+                rlt::evaluate(dev, actor, observation, action, actor_buffer);
+                rlt::clamp(dev, action, (T)-1, (T)1);
+                T dt = rlt::step(dev, env, state, action, next_state, rng);
+                bool terminated_flag = rlt::terminated(dev, env, observation_state, rng);
+                reward_acc += rlt::reward(dev, env, state, action, next_state, rng);
+                rlt::set_state(dev, ui, state, action);
                 state = next_state;
                 auto end = std::chrono::high_resolution_clock::now();
                 std::chrono::duration<double> diff = end-start;
@@ -272,11 +272,11 @@ int main(int argc, char** argv) {
                     for(int timeout_step_i = 0; timeout_step_i < startup_timeout; timeout_step_i++){
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                         if(timeout_step_i % 100 == 0){
-                            bpt::set_state(dev, ui, state, action);
+                            rlt::set_state(dev, ui, state, action);
                         }
                     }
                 }
-                T speed = bpt::math::sqrt(dev.math, next_state.linear_velocity[0] * next_state.linear_velocity[0] + next_state.linear_velocity[1] * next_state.linear_velocity[1] + next_state.linear_velocity[2] * next_state.linear_velocity[2]);
+                T speed = rlt::math::sqrt(dev.math, next_state.linear_velocity[0] * next_state.linear_velocity[0] + next_state.linear_velocity[1] * next_state.linear_velocity[1] + next_state.linear_velocity[2] * next_state.linear_velocity[2]);
                 if(speed > max_speed){
                     max_speed = speed;
                 }

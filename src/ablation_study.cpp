@@ -2,18 +2,18 @@
 #include <cassert>
 
 template <typename T_ABLATION_SPEC>
-void train(typename multirotor_training::config::Config<T_ABLATION_SPEC>::TI seed = 0){
-    using namespace multirotor_training::config;
+void train(typename learning_to_fly::config::Config<T_ABLATION_SPEC>::TI seed = 0){
+    using namespace learning_to_fly::config;
 
-    using CONFIG = multirotor_training::config::Config<T_ABLATION_SPEC>;
+    using CONFIG = learning_to_fly::config::Config<T_ABLATION_SPEC>;
     using T = typename CONFIG::T;
     using TI = typename CONFIG::TI;
 
     std::cout << "Seed " << seed << "\n";
-    multirotor_training::operations::TrainingState<CONFIG> ts;
-    multirotor_training::operations::init(ts, seed);
+    learning_to_fly::TrainingState<CONFIG> ts;
+    learning_to_fly::init(ts, seed);
     for(TI step_i=0; step_i < CONFIG::STEP_LIMIT; step_i++){
-        multirotor_training::operations::step(ts);
+        learning_to_fly::step(ts);
     }
     {
         std::string DATA_FILE_PATH = std::string("learning_curves_") + ts.run_name + ".h5";
@@ -35,7 +35,7 @@ void train(typename multirotor_training::config::Config<T_ABLATION_SPEC>::TI see
 
     }
 
-    multirotor_training::operations::destroy(ts);
+    learning_to_fly::destroy(ts);
 }
 
 template <typename TI>
@@ -69,7 +69,7 @@ int main(int argc, char** argv){
     std::cout << "Running the ablation study using RLtools: " RL_TOOLS_STRINGIFY(RL_TOOLS_COMMIT_HASH) << std::endl;
 
     using TI = int;
-    using BASE_CONFIG = multirotor_training::config::Config<AblationSpecBase<TI>>;
+    using BASE_CONFIG = learning_to_fly::config::Config<AblationSpecBase<TI>>;
 
     TI job_array_id;
     assert(argc == 1 || argc == 2);

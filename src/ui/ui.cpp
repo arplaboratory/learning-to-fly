@@ -14,7 +14,7 @@
 #include <rl_tools/operations/cpu_mux.h>
 #include <learning_to_fly/simulator/operations_cpu.h>
 #include <learning_to_fly/simulator/ui.h>
-namespace bpt = rl_tools;
+namespace rlt = rl_tools;
 
 //#include "../td3/parameters.h"
 #include "../training.h"
@@ -42,17 +42,17 @@ namespace my_program_state
 class websocket_session : public std::enable_shared_from_this<websocket_session> {
     beast::websocket::stream<tcp::socket> ws_;
 
-    using ABLATION_SPEC = multirotor_training::config::DEFAULT_ABLATION_SPEC;
-    struct CONFIG: multirotor_training::config::Config<ABLATION_SPEC>{
-        using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, bpt::devices::logging::CPU>;
-        using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
+    using ABLATION_SPEC = learning_to_fly::config::DEFAULT_ABLATION_SPEC;
+    struct CONFIG: learning_to_fly::config::Config<ABLATION_SPEC>{
+        using DEV_SPEC = rlt::devices::cpu::Specification<rlt::devices::math::CPU, rlt::devices::random::CPU, rlt::devices::logging::CPU>;
+        using DEVICE = rlt::DEVICE_FACTORY<DEV_SPEC>;
         static constexpr TI STEP_LIMIT = 300001;
         static constexpr bool DETERMINISTIC_EVALUATION = false;
         static constexpr TI BASE_SEED = 0;
     };
     using TI = CONFIG::TI;
 
-    multirotor_training::operations::TrainingState<CONFIG> ts;
+    learning_to_fly::TrainingState<CONFIG> ts;
     boost::asio::steady_timer timer_;
     std::chrono::time_point<std::chrono::high_resolution_clock> training_start, training_end;
     std::thread t;
@@ -61,15 +61,15 @@ class websocket_session : public std::enable_shared_from_this<websocket_session>
     std::vector<TI> idle_drones;
     TI drone_id_counter = 0;
     using T = CONFIG::T;
-    using ENVIRONMENT = typename parameters_sim2real::environment<CONFIG::T, TI, CONFIG::ABLATION_SPEC>::ENVIRONMENT;
+    using ENVIRONMENT = typename parameters::environment<CONFIG::T, TI, CONFIG::ABLATION_SPEC>::ENVIRONMENT;
     ENVIRONMENT env;
-    bpt::devices::DefaultCPU device;
-    bpt::MatrixDynamic<bpt::matrix::Specification<T, TI, 1, ENVIRONMENT::ACTION_DIM>> action;
+    rlt::devices::DefaultCPU device;
+    rlt::MatrixDynamic<rlt::matrix::Specification<T, TI, 1, ENVIRONMENT::ACTION_DIM>> action;
 
 public:
     explicit websocket_session(tcp::socket socket) : ws_(std::move(socket)), timer_(ws_.get_executor()) {
-        env.parameters = parameters_0::environment<T, TI, CONFIG::ABLATION_SPEC>::parameters;
-        bpt::malloc(device, action);
+        env.parameters = parameters::environment<T, TI, CONFIG::ABLATION_SPEC>::parameters;
+        rlt::malloc(device, action);
     }
 
     template<class Body>
@@ -86,14 +86,14 @@ public:
     void on_accept(beast::error_code ec){
         if(ec) return;
         do_read();
-//        bpt::set_all(device, action, 0);
-//        using UI = bpt::rl::environments::multirotor::UI<ENVIRONMENT>;
+//        rlt::set_all(device, action, 0);
+//        using UI = rlt::rl::environments::multirotor::UI<ENVIRONMENT>;
 //        UI ui;
 //        ws_.write(
-//            net::buffer(bpt::rl::environments::multirotor::model_message(device, env, ui).dump())
+//            net::buffer(rlt::rl::environments::multirotor::model_message(device, env, ui).dump())
 //        );
 //        ws_.write(
-//            net::buffer(bpt::rl::environments::multirotor::state_message(device, ui, state, action).dump())
+//            net::buffer(rlt::rl::environments::multirotor::state_message(device, ui, state, action).dump())
 //        );
     }
 
@@ -135,7 +135,7 @@ public:
             if(idle_drones.empty()){
                 TI drone_id = drone_id_counter++;
                 ongoing_drones.push_back(drone_id);
-                using UI = bpt::rl::environments::multirotor::UI<decltype(env)>;
+                using UI = rlt::rl::environments::multirotor::UI<decltype(env)>;
                 UI ui;
                 ui.id = std::to_string(drone_id);
                 constexpr TI width = 5;
@@ -146,13 +146,13 @@ public:
                 ui.origin[1] = (drone_id % 10)*scale - 5*scale;
                 ui.origin[2] = 0;
 //                std::cout << "Adding drone at " << ui << std::endl;
-                ws_.write(net::buffer(bpt::rl::environments::multirotor::model_message(device, env, ui).dump()));
+                ws_.write(net::buffer(rlt::rl::environments::multirotor::model_message(device, env, ui).dump()));
             }
             else{
                 TI drone_id = idle_drones.back();
                 ongoing_drones.push_back(drone_id);
                 idle_drones.pop_back();
-                using UI = bpt::rl::environments::multirotor::UI<decltype(env)>;
+                using UI = rlt::rl::environments::multirotor::UI<decltype(env)>;
                 UI ui;
                 ui.id = std::to_string(drone_id);
                 constexpr TI width = 5;
@@ -163,7 +163,7 @@ public:
                 ui.origin[1] = (drone_id % 10)*scale - 5 * scale;
                 ui.origin[2] = 0;
 //                std::cout << "Adding drone at " << ui << std::endl;
-                ws_.write(net::buffer(bpt::rl::environments::multirotor::model_message(device, env, ui).dump()));
+                ws_.write(net::buffer(rlt::rl::environments::multirotor::model_message(device, env, ui).dump()));
             }
             new_trajectories--;
         }
@@ -171,10 +171,10 @@ public:
             TI drone_id = ongoing_drones[trajectory_i];
             CONFIG::ENVIRONMENT::State state = ongoing_trajectories[trajectory_i].front();
             ongoing_trajectories[trajectory_i].erase(ongoing_trajectories[trajectory_i].begin());
-            using UI = bpt::rl::environments::multirotor::UI<CONFIG::ENVIRONMENT>;
+            using UI = rlt::rl::environments::multirotor::UI<CONFIG::ENVIRONMENT>;
             UI ui;
             ui.id = std::to_string(drone_id);
-            ws_.write(net::buffer(bpt::rl::environments::multirotor::state_message(device, ui, state).dump()));
+            ws_.write(net::buffer(rlt::rl::environments::multirotor::state_message(device, ui, state).dump()));
             if(ongoing_trajectories[trajectory_i].empty()){
                 idle_drones.push_back(drone_id);
                 ongoing_trajectories.erase(ongoing_trajectories.begin() + trajectory_i);
@@ -186,11 +186,11 @@ public:
             }
         }
         for(TI idle_i=0; idle_i < idle_drones.size(); idle_i ++){
-            using UI = bpt::rl::environments::multirotor::UI<CONFIG::ENVIRONMENT>;
+            using UI = rlt::rl::environments::multirotor::UI<CONFIG::ENVIRONMENT>;
             UI ui;
             TI drone_id = idle_drones[idle_i];
             ui.id = std::to_string(drone_id);
-            ws_.write(net::buffer(bpt::rl::environments::multirotor::remove_drone_message(device, ui).dump()));
+            ws_.write(net::buffer(rlt::rl::environments::multirotor::remove_drone_message(device, ui).dump()));
         }
         {
             nlohmann::json message;
@@ -235,9 +235,9 @@ public:
             typename CONFIG::TI seed = message["data"]["seed"];
             this->t = std::thread([seed, this](){
                 this->training_start = std::chrono::high_resolution_clock::now();
-                multirotor_training::operations::init(this->ts, seed);
+                learning_to_fly::init(this->ts, seed);
                 for(TI step_i=0; step_i < CONFIG::STEP_LIMIT; step_i++){
-                    multirotor_training::operations::step(this->ts);
+                    learning_to_fly::step(this->ts);
                 }
                 training_end = std::chrono::high_resolution_clock::now();
                 std::cout << "Training took " << (std::chrono::duration_cast<std::chrono::milliseconds>(training_end - training_start).count())/1000 << "s" << std::endl;

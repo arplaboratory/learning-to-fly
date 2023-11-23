@@ -3,7 +3,7 @@
 
 namespace learning_to_fly{
     namespace config {
-        using namespace bpt::nn_models::sequential::interface; // to simplify the model definition we import the sequential interface but we don't want to pollute the global namespace hence we do it in a model definition namespace
+        using namespace rlt::nn_models::sequential::interface; // to simplify the model definition we import the sequential interface but we don't want to pollute the global namespace hence we do it in a model definition namespace
         struct DEFAULT_ABLATION_SPEC{
             static constexpr bool DISTURBANCE = true;
             static constexpr bool OBSERVATION_NOISE = true;
@@ -38,12 +38,12 @@ namespace learning_to_fly{
 #endif
             using ABLATION_SPEC = T_ABLATION_SPEC;
 #ifdef RL_TOOLS_ENABLE_TENSORBOARD
-            using LOGGER = bpt::utils::typing::conditional_t<BENCHMARK, bpt::devices::logging::CPU , bpt::devices::logging::CPU_TENSORBOARD<bpt::devices::logging::CPU_TENSORBOARD_FREQUENCY_EXTENSION>>;
+            using LOGGER = rlt::utils::typing::conditional_t<BENCHMARK, rlt::devices::logging::CPU , rlt::devices::logging::CPU_TENSORBOARD<rlt::devices::logging::CPU_TENSORBOARD_FREQUENCY_EXTENSION>>;
 #else
-            using LOGGER = bpt::devices::logging::CPU;
+            using LOGGER = rlt::devices::logging::CPU;
 #endif
-            using DEV_SPEC = bpt::devices::cpu::Specification<bpt::devices::math::CPU, bpt::devices::random::CPU, LOGGER>;
-            using DEVICE = bpt::DEVICE_FACTORY<DEV_SPEC>;
+            using DEV_SPEC = rlt::devices::cpu::Specification<rlt::devices::math::CPU, rlt::devices::random::CPU, LOGGER>;
+            using DEVICE = rlt::DEVICE_FACTORY<DEV_SPEC>;
             using T = float;
             using TI = typename DEVICE::index_t;
 
@@ -56,10 +56,10 @@ namespace learning_to_fly{
             static_assert(ENVIRONMENT::ACTION_DIM == ENVIRONMENT_EVALUATION::ACTION_DIM);
             using UI = bool;
 
-            struct DEVICE_SPEC: bpt::devices::DefaultCPUSpecification {
-                using LOGGING = bpt::devices::logging::CPU;
+            struct DEVICE_SPEC: rlt::devices::DefaultCPUSpecification {
+                using LOGGING = rlt::devices::logging::CPU;
             };
-            struct TD3PendulumParameters: bpt::rl::algorithms::td3::DefaultParameters<T, TI>{
+            struct TD3PendulumParameters: rlt::rl::algorithms::td3::DefaultParameters<T, TI>{
 //                constexpr static typename TI CRITIC_BATCH_SIZE = 100;
 //                constexpr static typename TI ACTOR_BATCH_SIZE = 100;
 //                constexpr static T GAMMA = 0.997;
@@ -87,25 +87,25 @@ namespace learning_to_fly{
             struct ACTOR{
                 static constexpr TI HIDDEN_DIM = 64;
                 static constexpr TI BATCH_SIZE = TD3_PARAMETERS::ACTOR_BATCH_SIZE;
-                static constexpr auto ACTIVATION_FUNCTION = bpt::nn::activation_functions::FAST_TANH;
-                using LAYER_1_SPEC = bpt::nn::layers::dense::Specification<T, TI, ENVIRONMENT::OBSERVATION_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Input>;
-                using LAYER_1 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_1_SPEC>;
-                using LAYER_2_SPEC = bpt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Normal>;
-                using LAYER_2 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_2_SPEC>;
-                using LAYER_3_SPEC = bpt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, ENVIRONMENT::ACTION_DIM, bpt::nn::activation_functions::FAST_TANH, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Output>;
-                using LAYER_3 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_3_SPEC>;
+                static constexpr auto ACTIVATION_FUNCTION = rlt::nn::activation_functions::FAST_TANH;
+                using LAYER_1_SPEC = rlt::nn::layers::dense::Specification<T, TI, ENVIRONMENT::OBSERVATION_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Input>;
+                using LAYER_1 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_1_SPEC>;
+                using LAYER_2_SPEC = rlt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Normal>;
+                using LAYER_2 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_2_SPEC>;
+                using LAYER_3_SPEC = rlt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, ENVIRONMENT::ACTION_DIM, rlt::nn::activation_functions::FAST_TANH, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Output>;
+                using LAYER_3 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_3_SPEC>;
 
                 using MODEL = Module<LAYER_1, Module<LAYER_2, Module<LAYER_3>>>;
             };
 
             template <typename ACTOR>
             struct ACTOR_CHECKPOINT{
-                using LAYER_1_SPEC = bpt::nn::layers::dense::Specification<T, TI, ENVIRONMENT::OBSERVATION_DIM, ACTOR::HIDDEN_DIM, ACTOR::ACTIVATION_FUNCTION, bpt::nn::parameters::Plain, 1, bpt::nn::parameters::groups::Input>;
-                using LAYER_1 = bpt::nn::layers::dense::Layer<LAYER_1_SPEC>;
-                using LAYER_2_SPEC = bpt::nn::layers::dense::Specification<T, TI, ACTOR::HIDDEN_DIM, ACTOR::HIDDEN_DIM, ACTOR::ACTIVATION_FUNCTION, bpt::nn::parameters::Plain, 1, bpt::nn::parameters::groups::Normal>;
-                using LAYER_2 = bpt::nn::layers::dense::Layer<LAYER_2_SPEC>;
-                using LAYER_3_SPEC = bpt::nn::layers::dense::Specification<T, TI, ACTOR::HIDDEN_DIM, ENVIRONMENT::ACTION_DIM, bpt::nn::activation_functions::FAST_TANH, bpt::nn::parameters::Plain, 1, bpt::nn::parameters::groups::Output>;
-                using LAYER_3 = bpt::nn::layers::dense::Layer<LAYER_3_SPEC>;
+                using LAYER_1_SPEC = rlt::nn::layers::dense::Specification<T, TI, ENVIRONMENT::OBSERVATION_DIM, ACTOR::HIDDEN_DIM, ACTOR::ACTIVATION_FUNCTION, rlt::nn::parameters::Plain, 1, rlt::nn::parameters::groups::Input>;
+                using LAYER_1 = rlt::nn::layers::dense::Layer<LAYER_1_SPEC>;
+                using LAYER_2_SPEC = rlt::nn::layers::dense::Specification<T, TI, ACTOR::HIDDEN_DIM, ACTOR::HIDDEN_DIM, ACTOR::ACTIVATION_FUNCTION, rlt::nn::parameters::Plain, 1, rlt::nn::parameters::groups::Normal>;
+                using LAYER_2 = rlt::nn::layers::dense::Layer<LAYER_2_SPEC>;
+                using LAYER_3_SPEC = rlt::nn::layers::dense::Specification<T, TI, ACTOR::HIDDEN_DIM, ENVIRONMENT::ACTION_DIM, rlt::nn::activation_functions::FAST_TANH, rlt::nn::parameters::Plain, 1, rlt::nn::parameters::groups::Output>;
+                using LAYER_3 = rlt::nn::layers::dense::Layer<LAYER_3_SPEC>;
 
                 using MODEL = Module<LAYER_1, Module<LAYER_2, Module<LAYER_3>>>;
             };
@@ -115,32 +115,32 @@ namespace learning_to_fly{
                 static constexpr TI HIDDEN_DIM = 64;
                 static constexpr TI BATCH_SIZE = TD3_PARAMETERS::CRITIC_BATCH_SIZE;
 
-                static constexpr auto ACTIVATION_FUNCTION = bpt::nn::activation_functions::FAST_TANH;
-                using LAYER_1_SPEC = bpt::nn::layers::dense::Specification<T, TI, CRITIC_OBSERVATION_DIM + ENVIRONMENT::ACTION_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Input>;
-                using LAYER_1 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_1_SPEC>;
-                using LAYER_2_SPEC = bpt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Normal>;
-                using LAYER_2 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_2_SPEC>;
-                using LAYER_3_SPEC = bpt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, 1, bpt::nn::activation_functions::ActivationFunction::IDENTITY, PARAMETER_TYPE, BATCH_SIZE, bpt::nn::parameters::groups::Output>;
-                using LAYER_3 = bpt::nn::layers::dense::LayerBackwardGradient<LAYER_3_SPEC>;
+                static constexpr auto ACTIVATION_FUNCTION = rlt::nn::activation_functions::FAST_TANH;
+                using LAYER_1_SPEC = rlt::nn::layers::dense::Specification<T, TI, CRITIC_OBSERVATION_DIM + ENVIRONMENT::ACTION_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Input>;
+                using LAYER_1 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_1_SPEC>;
+                using LAYER_2_SPEC = rlt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, HIDDEN_DIM, ACTIVATION_FUNCTION, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Normal>;
+                using LAYER_2 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_2_SPEC>;
+                using LAYER_3_SPEC = rlt::nn::layers::dense::Specification<T, TI, HIDDEN_DIM, 1, rlt::nn::activation_functions::ActivationFunction::IDENTITY, PARAMETER_TYPE, BATCH_SIZE, rlt::nn::parameters::groups::Output>;
+                using LAYER_3 = rlt::nn::layers::dense::LayerBackwardGradient<LAYER_3_SPEC>;
 
                 using MODEL = Module<LAYER_1, Module<LAYER_2, Module<LAYER_3>>>;
             };
 
-            struct OPTIMIZER_PARAMETERS: bpt::nn::optimizers::adam::DefaultParameters<T, TI>{
+            struct OPTIMIZER_PARAMETERS: rlt::nn::optimizers::adam::DefaultParameters<T, TI>{
                 static constexpr T WEIGHT_DECAY = 0.0001;
                 static constexpr T WEIGHT_DECAY_INPUT = 0.0001;
                 static constexpr T WEIGHT_DECAY_OUTPUT = 0.0001;
                 static constexpr T BIAS_LR_FACTOR = 1;
             };
-            using OPTIMIZER = bpt::nn::optimizers::Adam<OPTIMIZER_PARAMETERS>;
-            using ACTOR_TYPE = typename ACTOR<bpt::nn::parameters::Adam>::MODEL;
-            using ACTOR_CHECKPOINT_TYPE = typename ACTOR_CHECKPOINT<ACTOR<bpt::nn::parameters::Plain>>::MODEL;
-            using ACTOR_TARGET_TYPE = typename ACTOR<bpt::nn::parameters::Plain>::MODEL;
-            using CRITIC_TYPE = typename CRITIC<bpt::nn::parameters::Adam>::MODEL;
-            using CRITIC_TARGET_TYPE = typename CRITIC<bpt::nn::parameters::Plain>::MODEL;
+            using OPTIMIZER = rlt::nn::optimizers::Adam<OPTIMIZER_PARAMETERS>;
+            using ACTOR_TYPE = typename ACTOR<rlt::nn::parameters::Adam>::MODEL;
+            using ACTOR_CHECKPOINT_TYPE = typename ACTOR_CHECKPOINT<ACTOR<rlt::nn::parameters::Plain>>::MODEL;
+            using ACTOR_TARGET_TYPE = typename ACTOR<rlt::nn::parameters::Plain>::MODEL;
+            using CRITIC_TYPE = typename CRITIC<rlt::nn::parameters::Adam>::MODEL;
+            using CRITIC_TARGET_TYPE = typename CRITIC<rlt::nn::parameters::Plain>::MODEL;
 
-            using ACTOR_CRITIC_SPEC = bpt::rl::algorithms::td3::Specification<T, TI, ENVIRONMENT, ACTOR_TYPE, ACTOR_TARGET_TYPE, CRITIC_TYPE, CRITIC_TARGET_TYPE, OPTIMIZER, TD3_PARAMETERS>;
-            using ACTOR_CRITIC_TYPE = bpt::rl::algorithms::td3::ActorCritic<ACTOR_CRITIC_SPEC>;
+            using ACTOR_CRITIC_SPEC = rlt::rl::algorithms::td3::Specification<T, TI, ENVIRONMENT, ACTOR_TYPE, ACTOR_TARGET_TYPE, CRITIC_TYPE, CRITIC_TARGET_TYPE, OPTIMIZER, TD3_PARAMETERS>;
+            using ACTOR_CRITIC_TYPE = rlt::rl::algorithms::td3::ActorCritic<ACTOR_CRITIC_SPEC>;
 
 
             static constexpr bool ACTOR_ENABLE_CHECKPOINTS = !BENCHMARK;
@@ -157,9 +157,9 @@ namespace learning_to_fly{
             static constexpr TI ENVIRONMENT_STEP_LIMIT = 500;
             static constexpr TI BASE_SEED = 0;
             static constexpr bool CONSTRUCT_LOGGER = false;
-            using OFF_POLICY_RUNNER_SPEC = bpt::rl::components::off_policy_runner::Specification<T, TI, ENVIRONMENT, N_ENVIRONMENTS, ASYMMETRIC_OBSERVATIONS, REPLAY_BUFFER_CAP, ENVIRONMENT_STEP_LIMIT, bpt::rl::components::off_policy_runner::DefaultParameters<T>, false, true, 1000>;
-            using OFF_POLICY_RUNNER_TYPE = bpt::rl::components::OffPolicyRunner<OFF_POLICY_RUNNER_SPEC>;
-            static constexpr bpt::rl::components::off_policy_runner::DefaultParameters<T> off_policy_runner_parameters = {
+            using OFF_POLICY_RUNNER_SPEC = rlt::rl::components::off_policy_runner::Specification<T, TI, ENVIRONMENT, N_ENVIRONMENTS, ASYMMETRIC_OBSERVATIONS, REPLAY_BUFFER_CAP, ENVIRONMENT_STEP_LIMIT, rlt::rl::components::off_policy_runner::DefaultParameters<T>, false, true, 1000>;
+            using OFF_POLICY_RUNNER_TYPE = rlt::rl::components::OffPolicyRunner<OFF_POLICY_RUNNER_SPEC>;
+            static constexpr rlt::rl::components::off_policy_runner::DefaultParameters<T> off_policy_runner_parameters = {
                     0.1
             };
 
@@ -173,32 +173,32 @@ namespace learning_to_fly{
             using T = typename SUPER::T;
             using TI = typename SUPER::TI;
             using ENVIRONMENT = typename SUPER::ENVIRONMENT;
-            using VALIDATION_SPEC = bpt::rl::utils::validation::Specification<T, TI, ENVIRONMENT>;
+            using VALIDATION_SPEC = rlt::rl::utils::validation::Specification<T, TI, ENVIRONMENT>;
             static constexpr TI VALIDATION_N_EPISODES = 10;
             static constexpr TI VALIDATION_MAX_EPISODE_LENGTH = SUPER::ENVIRONMENT_STEP_LIMIT;
-            using TASK_SPEC = bpt::rl::utils::validation::TaskSpecification<VALIDATION_SPEC, VALIDATION_N_EPISODES, VALIDATION_MAX_EPISODE_LENGTH>;
-            using ADDITIONAL_METRICS = bpt::rl::utils::validation::set::Component<
-            bpt::rl::utils::validation::metrics::SettlingFractionPosition<TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::POSITION, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::POSITION, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::POSITION, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::POSITION, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::ANGLE, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::ANGLE, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 100>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorMean<bpt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 200>,
-            bpt::rl::utils::validation::set::Component<bpt::rl::utils::validation::metrics::MaxErrorStd <bpt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 200>,
-            bpt::rl::utils::validation::set::FinalComponent>>>>>>>>>>>>>>>>>>>;
-            using METRICS = bpt::rl::utils::validation::DefaultMetrics<ADDITIONAL_METRICS>;
+            using TASK_SPEC = rlt::rl::utils::validation::TaskSpecification<VALIDATION_SPEC, VALIDATION_N_EPISODES, VALIDATION_MAX_EPISODE_LENGTH>;
+            using ADDITIONAL_METRICS = rlt::rl::utils::validation::set::Component<
+            rlt::rl::utils::validation::metrics::SettlingFractionPosition<TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::POSITION, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::POSITION, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::POSITION, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::POSITION, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::ANGLE, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::ANGLE, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::LINEAR_VELOCITY, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::ANGULAR_VELOCITY, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 100>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorMean<rlt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 200>,
+            rlt::rl::utils::validation::set::Component<rlt::rl::utils::validation::metrics::MaxErrorStd <rlt::rl::utils::validation::metrics::multirotor::ANGULAR_ACCELERATION, TI, 200>,
+            rlt::rl::utils::validation::set::FinalComponent>>>>>>>>>>>>>>>>>>>;
+            using METRICS = rlt::rl::utils::validation::DefaultMetrics<ADDITIONAL_METRICS>;
         };
     }
 }

@@ -3,7 +3,7 @@
 
 #include <learning_to_fly/simulator/operations_cpu.h>
 #include "parameters.h"
-namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
+namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
 #include <iostream>
 #include <chrono>
@@ -17,8 +17,8 @@ constexpr size_t N_THREADS = 128;
 constexpr size_t N_THREADS_CPU = 1;
 constexpr size_t N_ITERATIONS = 1000000;
 
-using DEVICE_GPU = bpt::devices::CUDA<bpt::devices::DefaultCUDASpecification>;
-using DEVICE_CPU = bpt::devices::CPU<bpt::devices::DefaultCPUSpecification>;
+using DEVICE_GPU = rlt::devices::CUDA<rlt::devices::DefaultCUDASpecification>;
+using DEVICE_CPU = rlt::devices::CPU<rlt::devices::DefaultCPUSpecification>;
 
 using TI_GPU = DEVICE_CPU::index_t;
 using TI_CPU = DEVICE_CPU::index_t;
@@ -36,8 +36,8 @@ struct SimulateParallelSpec{
 };
 
 template <typename DEVICE, typename SPEC, typename SPEC_SIMULATE>
-void simulate_sequential(DEVICE& device, const bpt::rl::environments::Multirotor<SPEC>* envs, const typename bpt::rl::environments::Multirotor<SPEC>::State* states_input, typename bpt::rl::environments::Multirotor<SPEC>::State* next_states_output, const SPEC_SIMULATE) {
-    using ENVIRONMENT = bpt::rl::environments::Multirotor<SPEC>;
+void simulate_sequential(DEVICE& device, const rlt::rl::environments::Multirotor<SPEC>* envs, const typename rlt::rl::environments::Multirotor<SPEC>::State* states_input, typename rlt::rl::environments::Multirotor<SPEC>::State* next_states_output, const SPEC_SIMULATE) {
+    using ENVIRONMENT = rlt::rl::environments::Multirotor<SPEC>;
     using STATE = typename ENVIRONMENT::State;
     using TI = typename DEVICE::index_t;
     for(TI block_i = 0; block_i < SPEC_SIMULATE::N_BLOCKS; block_i++){
@@ -53,7 +53,7 @@ void simulate_sequential(DEVICE& device, const bpt::rl::environments::Multirotor
                 for(TI action_i=0; action_i<ENVIRONMENT::ACTION_DIM; action_i++){
                     action[action_i] = 0;
                 }
-                bpt::utils::integrators::rk4<DEVICE, T, typename SPEC::PARAMETERS, STATE, ENVIRONMENT::ACTION_DIM, bpt::rl::environments::multirotor::multirotor_dynamics_dispatch<DEVICE, typename SPEC::T, typename SPEC::PARAMETERS, STATE>>(device, env.parameters, state, action, env.parameters.integration.dt, next_state);
+                rlt::utils::integrators::rk4<DEVICE, T, typename SPEC::PARAMETERS, STATE, ENVIRONMENT::ACTION_DIM, rlt::rl::environments::multirotor::multirotor_dynamics_dispatch<DEVICE, typename SPEC::T, typename SPEC::PARAMETERS, STATE>>(device, env.parameters, state, action, env.parameters.integration.dt, next_state);
                 state = next_state;
             }
             next_states_output[full_id] = state;
@@ -64,8 +64,8 @@ void simulate_sequential(DEVICE& device, const bpt::rl::environments::Multirotor
 template <typename DEVICE, typename SPEC, typename SPEC_SIMULATE>
 __global__ void
 __launch_bounds__(SPEC_SIMULATE::BLOCK_DIM)//, minBlocksPerMultiprocessor, maxBlocksPerCluster)
-simulate_parallel(DEVICE& device, const bpt::rl::environments::Multirotor<SPEC>* envs, const typename bpt::rl::environments::Multirotor<SPEC>::State* states_input, typename bpt::rl::environments::Multirotor<SPEC>::State* next_states_output, const SPEC_SIMULATE) {
-    using ENVIRONMENT = bpt::rl::environments::Multirotor<SPEC>;
+simulate_parallel(DEVICE& device, const rlt::rl::environments::Multirotor<SPEC>* envs, const typename rlt::rl::environments::Multirotor<SPEC>::State* states_input, typename rlt::rl::environments::Multirotor<SPEC>::State* next_states_output, const SPEC_SIMULATE) {
+    using ENVIRONMENT = rlt::rl::environments::Multirotor<SPEC>;
     using STATE = typename ENVIRONMENT::State;
     using TI = typename DEVICE::index_t;
     const TI full_id = blockIdx.x * blockDim.x + threadIdx.x;
@@ -85,7 +85,7 @@ simulate_parallel(DEVICE& device, const bpt::rl::environments::Multirotor<SPEC>*
         for(TI action_i=0; action_i<ENVIRONMENT::ACTION_DIM; action_i++){
             action[action_i] = 0;
         }
-        bpt::utils::integrators::rk4<DEVICE, T, typename SPEC::PARAMETERS, STATE, ENVIRONMENT::ACTION_DIM, bpt::rl::environments::multirotor::multirotor_dynamics_dispatch<DEVICE, typename SPEC::T, typename SPEC::PARAMETERS, STATE>>(device, env.parameters, state, action, env.parameters.integration.dt, next_state);
+        rlt::utils::integrators::rk4<DEVICE, T, typename SPEC::PARAMETERS, STATE, ENVIRONMENT::ACTION_DIM, rlt::rl::environments::multirotor::multirotor_dynamics_dispatch<DEVICE, typename SPEC::T, typename SPEC::PARAMETERS, STATE>>(device, env.parameters, state, action, env.parameters.integration.dt, next_state);
         state = next_state;
     }
     next_states_output[full_id] = state;
@@ -122,7 +122,7 @@ int main(void) {
         for(TI_CPU thread_i=0; thread_i<N_THREADS; thread_i++){
             envs[block_i][thread_i].parameters = penv::parameters;
             envs[block_i][thread_i].parameters.integration.dt = DT;
-            bpt::initial_state(device_cpu, envs[block_i][thread_i], initial_states[block_i][thread_i]);
+            rlt::initial_state(device_cpu, envs[block_i][thread_i], initial_states[block_i][thread_i]);
         }
     }
 

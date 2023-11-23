@@ -12,7 +12,7 @@
 #include <rl_tools/utils/generic/typing.h>
 
 namespace parameters{
-    namespace bpt = rl_tools;
+    namespace rlt = rl_tools;
     struct DefaultAblationSpec{
         static constexpr bool DISTURBANCE = true;
         static constexpr bool OBSERVATION_NOISE = true;
@@ -24,8 +24,8 @@ namespace parameters{
         static constexpr bool INIT_NORMAL = true;
     };
     namespace builder {
-        namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER::rl_tools;
-        using namespace bpt::rl::environments::multirotor;
+        namespace rlt = RL_TOOLS_NAMESPACE_WRAPPER::rl_tools;
+        using namespace rlt::rl::environments::multirotor;
         template<typename T, typename TI, typename T_ABLATION_SPEC>
         struct environment {
             using ABLATION_SPEC = T_ABLATION_SPEC;
@@ -73,29 +73,29 @@ namespace parameters{
 
             struct ENVIRONMENT_STATIC_PARAMETERS{
                 static constexpr TI ACTION_HISTORY_LENGTH = 32;
-                using STATE_TYPE = bpt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
-                    bpt::utils::typing::conditional_t<ABLATION_SPEC::ACTION_HISTORY,
-                        StateRotorsHistory<T, TI, ACTION_HISTORY_LENGTH, bpt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>,
-                        StateRotors<T, TI, bpt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>>,
-                    bpt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>;
+                using STATE_TYPE = rlt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
+                    rlt::utils::typing::conditional_t<ABLATION_SPEC::ACTION_HISTORY,
+                        StateRotorsHistory<T, TI, ACTION_HISTORY_LENGTH, rlt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>,
+                        StateRotors<T, TI, rlt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>>,
+                    rlt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE, StateRandomForce<T, TI, StateBase<T, TI>>, StateBase<T, TI>>>;
                 using OBSERVATION_TYPE = observation::Position<observation::PositionSpecification<T, TI,
                         observation::OrientationRotationMatrix<observation::OrientationRotationMatrixSpecification<T, TI,
                                 observation::LinearVelocity<observation::LinearVelocitySpecification<T, TI,
                                         observation::AngularVelocity<observation::AngularVelocitySpecification<T, TI,
-                                                bpt::utils::typing::conditional_t<ABLATION_SPEC::ACTION_HISTORY, observation::ActionHistory<observation::ActionHistorySpecification<T, TI, ACTION_HISTORY_LENGTH>>, observation::LastComponent<TI>>>>>>>>>>;
-                using OBSERVATION_TYPE_PRIVILEGED = bpt::utils::typing::conditional_t<ABLATION_SPEC::ASYMMETRIC_ACTOR_CRITIC,
+                                                rlt::utils::typing::conditional_t<ABLATION_SPEC::ACTION_HISTORY, observation::ActionHistory<observation::ActionHistorySpecification<T, TI, ACTION_HISTORY_LENGTH>>, observation::LastComponent<TI>>>>>>>>>>;
+                using OBSERVATION_TYPE_PRIVILEGED = rlt::utils::typing::conditional_t<ABLATION_SPEC::ASYMMETRIC_ACTOR_CRITIC,
                     observation::Position<observation::PositionSpecificationPrivileged<T, TI,
                         observation::OrientationRotationMatrix<observation::OrientationRotationMatrixSpecificationPrivileged<T, TI,
                             observation::LinearVelocity<observation::LinearVelocitySpecificationPrivileged<T, TI,
                                 observation::AngularVelocity<observation::AngularVelocitySpecificationPrivileged<T, TI,
-                                    bpt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE,
+                                    rlt::utils::typing::conditional_t<ABLATION_SPEC::DISTURBANCE,
                                         observation::RandomForce<observation::RandomForceSpecification<T, TI,
-                                            bpt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
+                                            rlt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
                                                 observation::RotorSpeeds<observation::RotorSpeedsSpecification<T, TI>>,
                                                 observation::LastComponent<TI>
                                             >
                                         >>,
-                                        bpt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
+                                        rlt::utils::typing::conditional_t<ABLATION_SPEC::ROTOR_DELAY,
                                                 observation::RotorSpeeds<observation::RotorSpeedsSpecification<T, TI>>,
                                                 observation::LastComponent<TI>
                                         >
@@ -109,8 +109,8 @@ namespace parameters{
                 static constexpr bool PRIVILEGED_OBSERVATION_NOISE = false;
             };
 
-            using ENVIRONMENT_SPEC = bpt::rl::environments::multirotor::Specification<T, TI, PARAMETERS, ENVIRONMENT_STATIC_PARAMETERS>;
-            using ENVIRONMENT = bpt::rl::environments::Multirotor<ENVIRONMENT_SPEC>;
+            using ENVIRONMENT_SPEC = rlt::rl::environments::multirotor::Specification<T, TI, PARAMETERS, ENVIRONMENT_STATIC_PARAMETERS>;
+            using ENVIRONMENT = rlt::rl::environments::Multirotor<ENVIRONMENT_SPEC>;
         };
     }
     template<typename T, typename TI, typename ABLATION_SPEC>
