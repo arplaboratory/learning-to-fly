@@ -26,7 +26,7 @@
 
 namespace bpt = RL_TOOLS_NAMESPACE_WRAPPER ::rl_tools;
 
-#include "parameters_training.h"
+#include "parameters.h"
 
 #include <vector>
 #include <queue>
@@ -82,10 +82,10 @@ namespace multirotor_training{
             using TI = typename DEVICE::index_t;
 
 
-            using ENVIRONMENT = typename parameters_0::environment<T, TI, ABLATION_SPEC>::ENVIRONMENT;
+            using ENVIRONMENT = typename parameters::environment<T, TI, ABLATION_SPEC>::ENVIRONMENT;
             using ABLATION_SPEC_EVAL_INSTANCE = ABLATION_SPEC_EVAL<ABLATION_SPEC>;
             static_assert(ABLATION_SPEC_EVAL_INSTANCE::ROTOR_DELAY == true);
-            using ENVIRONMENT_EVALUATION = typename parameters_0::environment<T, TI, ABLATION_SPEC_EVAL_INSTANCE>::ENVIRONMENT;
+            using ENVIRONMENT_EVALUATION = typename parameters::environment<T, TI, ABLATION_SPEC_EVAL_INSTANCE>::ENVIRONMENT;
             static_assert(ENVIRONMENT::OBSERVATION_DIM == ENVIRONMENT_EVALUATION::OBSERVATION_DIM);
             static_assert(ENVIRONMENT::ACTION_DIM == ENVIRONMENT_EVALUATION::ACTION_DIM);
             using UI = bool;
@@ -273,8 +273,8 @@ namespace multirotor_training{
             using T = typename CONFIG::T;
             using TI = typename CONFIG::TI;
             using ABLATION_SPEC = typename CONFIG::ABLATION_SPEC;
-            auto env_parameters = parameters_0::environment<T, TI, ABLATION_SPEC>::parameters;
-            auto env_parameters_eval = parameters_0::environment<T, TI, config::ABLATION_SPEC_EVAL<ABLATION_SPEC>>::parameters;
+            auto env_parameters = parameters::environment<T, TI, ABLATION_SPEC>::parameters;
+            auto env_parameters_eval = parameters::environment<T, TI, config::ABLATION_SPEC_EVAL<ABLATION_SPEC>>::parameters;
             for (auto& env : ts.envs) {
                 env.parameters = env_parameters;
             }
@@ -303,7 +303,7 @@ namespace multirotor_training{
             ts.off_policy_runner.parameters = CONFIG::off_policy_runner_parameters;
 
             for(typename CONFIG::ENVIRONMENT& env: ts.validation_envs){
-                env.parameters = parameters_0::environment<typename CONFIG::T, TI, ABLATION_SPEC>::parameters;
+                env.parameters = parameters::environment<typename CONFIG::T, TI, ABLATION_SPEC>::parameters;
             }
             bpt::malloc(ts.device, ts.validation_actor_buffers);
             bpt::init(ts.device, ts.task, ts.validation_envs, ts.rng_eval);

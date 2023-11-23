@@ -14,7 +14,7 @@ void run(){
 #ifdef LEARNING_TO_FLY_IN_SECONDS_BENCHMARK
     constexpr TI NUM_RUNS = 1;
 #else
-    constexpr TI NUM_RUNS = 10;
+    constexpr TI NUM_RUNS = 1;
 #endif
 
     for (TI run_i = 0; run_i < NUM_RUNS; run_i++){
