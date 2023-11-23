@@ -150,7 +150,14 @@ If you find a policy to take-off and hover well, you can change the parameter `r
 ## Citing
 When using our code/setup in an academic work please cite our publication using the following Bibtex citation:
 ```
-Bibtex tbd
+@misc{eschmann2023learning,
+      title={Learning to Fly in Seconds}, 
+      author={Jonas Eschmann and Dario Albani and Giuseppe Loianno},
+      year={2023},
+      eprint={2311.13081},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
 ```
 
 
