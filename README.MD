@@ -18,7 +18,7 @@ Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
 
 
 ## Introduction
-This repository contains the code for the paper "Learning to Fly in Seconds". The main dependency is the [RLtools](https://github.com/rl-tools/rl-tools) deep reinforcement learning library.
+This repository contains the code for the paper [Learning to Fly in Seconds](https://arxiv.org/abs/2311.13081). The main dependency is the [RLtools](https://github.com/rl-tools/rl-tools) deep reinforcement learning library.
 
 
 
