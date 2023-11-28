@@ -16,7 +16,7 @@ Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
 <br>
 <div align="center" >
 
-<a href="https://youtu.be/NRD43ZA1D-4" rel="Link to video"><img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/video_thumbnail.png" height='200'/></a>
+<a href="https://youtu.be/NRD43ZA1D-4" rel="Link to video"><img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/video_thumbnail.png" height='250'/></a>
 </div>
 <br>
 
