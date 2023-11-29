@@ -27,7 +27,7 @@ This repository contains the code for the paper [Learning to Fly in Seconds](htt
 
 <br>
 <div align="center" >
-<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/overview.jpg" width='350'/>
+<img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/overview.jpg"/>
 </div>
 
 The main dependency is the [RLtools](https://github.com/rl-tools/rl-tools) deep reinforcement learning library. 
