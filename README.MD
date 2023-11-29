@@ -25,7 +25,6 @@ Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
 ## Introduction
 This repository contains the code for the paper [Learning to Fly in Seconds](https://arxiv.org/abs/2311.13081). It allows to train end-to-end control policies using deep reinforcement learning. The training is done in simulation and is finished within seconds on a consumer-grade laptop. The trained policies generalize and can be deployed on real quadrotors:
 
-<br>
 <div align="center" >
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/overview.jpg"/>
 </div>
