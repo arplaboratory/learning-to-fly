@@ -44,8 +44,6 @@ def mode_hover_original(cf, args):
             cnt = 0
         prev = current
         send_hover_packet(cf, args.height)
-        # send_learned_policy_packet(cf)
-        # time.sleep(0.05)
 
 def mode_hover_learned(cf, args):
     set_param(cf, "rlt.trigger", 0) # setting the trigger mode to the custom command (cf. https://github.com/arplaboratory/learning_to_fly_controller/blob/0a7680de591d85813f1cd27834b240aeac962fdd/rl_tools_controller.c#L80)
@@ -67,9 +65,7 @@ def mode_hover_learned(cf, args):
             acc = 0
             cnt = 0
         prev = current
-        # send_hover_packet(cf)
         send_learned_policy_packet(cf)
-        # time.sleep(0.05)
 
 def set_param(cf, name, target):
     print(f"Parameter {name} was {cf.param.get_value(name)}, setting to {target}")
