@@ -188,6 +188,8 @@ python3 scripts/trigger.py --mode hover_learned
 python3 scripts/trigger.py --mode trajectory_tracking --trajectory-scale 0.3
  ```
 
+ Note: If you moved the Crazyflie it is best to restart it before flying (in the same position and orientation as for the intended take-off) because the policy targets to regulate the global yaw to `0`. If there is a large offset (e.g. `>90 degree`) this might trigger a strong response. 
+
 
 
 ## Citing
