@@ -2,14 +2,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "trigger hovering",
+            "name": "trigger hovering (original)",
             "type": "python",
             "request": "launch",
             "program": "scripts/trigger.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "--mode", "hover"
+                "--mode", "hover_original"
+            ]
+        },
+        {
+            "name": "trigger hovering (policy)",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "hover_learned",
+                "--height", "0.2"
             ]
         },
         {
@@ -20,7 +32,8 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "--mode", "trajectory_tracking"
+                "--mode", "trajectory_tracking",
+                "--trajectory-scale", "0.3"
             ]
         }
     ]
