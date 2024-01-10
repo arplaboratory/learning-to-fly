@@ -185,7 +185,7 @@ python3 scripts/trigger.py --mode hover_learned
 ```
  `trajectory_tracking` takes off using the original controller first and after a timeout (`3s` by default) switches to the learned policy to do the trajectory tracking. The interval (`5.5s` by default) and the scale (`1x` by default, note the figure eight is `2mx1m` by default) can be adjusted using the parameters `--trajectory-scale` and `--trajectory-interval`:
  ```
-python3 scripts/trigger.py --mode trajectory_tracking
+python3 scripts/trigger.py --mode trajectory_tracking --trajectory-scale 0.3
  ```
 
 
