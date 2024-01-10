@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "trigger hovering",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "hover"
+            ]
+        },
+        {
+            "name": "trigger trajectory tracking",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "trajectory_tracking"
+            ]
+        }
+    ]
+}
