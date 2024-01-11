@@ -179,7 +179,7 @@ If you find a policy to take-off and hover well, you can change the parameter `r
 ### Using the trigger script
 If you don't have a gamepad available and for better trajectory tracking (taking off first -> then tracking) you can use the `scripts/trigger.py` script. It has three modes `hover_original (just for testing)`, `takeoff_and_switch`, `hover_learned`,  and `trajectory_tracking`. In all modes the `enter` key is used as the dead man's switch so that if anything goes wrong you can just release it and the motors should turn off. 
 
-Since taking-off has a big sim2real gap (ground-effect, z-ranger/optical-flow estimation behavior) the most conservative option (and recommended first step) is to take-off with the original controller and then switch to the learned policy mid-air. This is accomplished by the `takeoff_and_switch` mode which takes off with the original controller and switches to the learned policy after three seconds. The height can be specified with `--height`.
+Since taking-off has a big sim2real gap (ground-effect, z-ranger/optical-flow estimation behavior) and a large setpoint error, the most conservative option (and recommended first step) is to take-off with the original controller and then switch to the learned policy mid-air. This is accomplished by the `takeoff_and_switch` mode which takes off with the original controller and switches to the learned policy after three seconds. The height can be specified with `--height`.
 ```
 python3 scripts/trigger.py --mode takeoff_and_switch
 ```
