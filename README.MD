@@ -177,9 +177,14 @@ Once the firmware is flashed, use the [cfclient](https://www.bitcraze.io/documen
 If you find a policy to take-off and hover well, you can change the parameter `rlt.wn` to `4` which puts the controller into figure-eight tracking mode. The scale and interval ([s]) can be adjusted by the parameters `rlt.fes` and `rlt.fei` respectively. The height at which the figure-eight is executed is set by `rlt.target_z_fe`.
 
 ### Using the trigger script
-If you don't have a gamepad available and for better trajectory tracking (taking off first -> then tracking) you can use the `scripts/trigger.py` script. It has three modes `hover_learned`, `hover_original (just for testing)` and `trajectory_tracking`. In all modes the `enter` key is used as the dead man's switch so that if anything goes wrong you can just release it and the motors should turn off. 
+If you don't have a gamepad available and for better trajectory tracking (taking off first -> then tracking) you can use the `scripts/trigger.py` script. It has three modes `hover_original (just for testing)`, `takeoff_and_switch`, `hover_learned`,  and `trajectory_tracking`. In all modes the `enter` key is used as the dead man's switch so that if anything goes wrong you can just release it and the motors should turn off. 
 
-`hover_learned` uses the trained policy to take-off and hover (the height can be specified with `--height`):
+Since taking-off has a big sim2real gap (ground-effect, z-ranger/optical-flow estimation behavior) the most conservative option (and recommended first step) is to take-off with the original controller and then switch to the learned policy mid-air. This is accomplished by the `takeoff_and_switch` mode which takes off with the original controller and switches to the learned policy after three seconds. The height can be specified with `--height`.
+```
+python3 scripts/trigger.py --mode takeoff_and_switch
+```
+
+If the hovering is stable you can also try taking off using the policy. The `hover_learned` mode uses the trained policy to take-off and hover (the height can be specified with `--height`):
 ```
 python3 scripts/trigger.py --mode hover_learned
 ```

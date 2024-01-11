@@ -13,6 +13,18 @@
             ]
         },
         {
+            "name": "trigger takeoff and switch",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "takeoff_and_switch",
+                "--height", "0.2"
+            ]
+        },
+        {
             "name": "trigger hovering (policy)",
             "type": "python",
             "request": "launch",
