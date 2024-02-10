@@ -101,6 +101,7 @@ As an alternative to openblas you can also install [Intel MKL](https://www.intel
 ```
 brew install hdf5 protobuf boost
 ```
+Please make sure that `brew` links the libraries correctly. If not you might have to link e.g. `protobuf` manually using `brew link protobuf`.
 
 
 
