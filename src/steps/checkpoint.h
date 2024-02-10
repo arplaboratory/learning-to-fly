@@ -10,6 +10,8 @@
 #include <rl_tools/nn/layers/dense/persist_code.h>
 #include <rl_tools/nn_models/sequential/persist_code.h>
 
+#include <filesystem>
+#include <fstream>
 namespace learning_to_fly {
     namespace steps {
         template <typename T_CONFIG>
