@@ -171,9 +171,31 @@ cfloader flash build_firmware/cf2.bin stm32-fw -w radio://0/80/2M
 
 **Note: Running the learned controller is at your own risk!**
 
+### Using a Gamepad
 Once the firmware is flashed, use the [cfclient](https://www.bitcraze.io/documentation/repository/crazyflie-clients-python/master/userguides/userguide_client/) UI to connect to the Crazyflie. To fly you should have some system for position estimation. In our tests using the Crazyflie 2.1 and the [Optical Flow Deck v2](https://www.bitcraze.io/products/flow-deck-v2/) 10/10 seeds yielded policies that could successfully take-off and hover. We recommend using a game-controller to use the "hover button" as a [Dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch). The way our controller is configured by default, it reacts to the "hover button" as a signal to be activated. By default, it will shortly idle the motors and then pass through the RPM outputs of the policy. The default setpoint is 0.3m above the position of the quadrotor where the hover-button was pressed. Also make sure that the yaw angle is low before taking off because we noticed some agressive maneuvres when the yaw angle is too high which in combination with the ground effect might lead to a crash. 
 
 If you find a policy to take-off and hover well, you can change the parameter `rlt.wn` to `4` which puts the controller into figure-eight tracking mode. The scale and interval ([s]) can be adjusted by the parameters `rlt.fes` and `rlt.fei` respectively. The height at which the figure-eight is executed is set by `rlt.target_z_fe`.
+
+### Using the trigger script
+If you don't have a gamepad available and for better trajectory tracking (taking off first -> then tracking) you can use the `scripts/trigger.py` script. It has three modes `hover_original (just for testing)`, `takeoff_and_switch`, `hover_learned`,  and `trajectory_tracking`. In all modes the `enter` key is used as the dead man's switch so that if anything goes wrong you can just release it and the motors should turn off. 
+
+Since taking-off has a big sim2real gap (ground-effect, z-ranger/optical-flow estimation behavior) and a large setpoint error, the most conservative option (and recommended first step) is to take-off with the original controller and then switch to the learned policy mid-air. This is accomplished by the `takeoff_and_switch` mode which takes off with the original controller and switches to the learned policy after three seconds. The height can be specified with `--height`.
+```
+python3 scripts/trigger.py --mode takeoff_and_switch
+```
+
+If the hovering is stable you can also try taking off using the policy. The `hover_learned` mode uses the trained policy to take-off and hover (the height can be specified with `--height`):
+```
+python3 scripts/trigger.py --mode hover_learned
+```
+ `trajectory_tracking` takes off using the original controller first and after a timeout (`3s` by default) switches to the learned policy to do the trajectory tracking. The interval (`5.5s` by default) and the scale (`1x` by default, note the figure eight is `2mx1m` by default) can be adjusted using the parameters `--trajectory-scale` and `--trajectory-interval`:
+ ```
+python3 scripts/trigger.py --mode trajectory_tracking --trajectory-scale 0.3
+ ```
+
+ Note: If you moved the Crazyflie it is best to restart it before flying (in the same position and orientation as for the intended take-off) because the policy targets to regulate the global yaw to `0`. If there is a large offset (e.g. `>90 degree`) this might trigger a strong response. 
+
+
 
 ## Citing
 When using our code/setup in an academic work please cite our publication using the following Bibtex citation:

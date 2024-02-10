@@ -1,0 +1,52 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "trigger hovering (original)",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "hover_original"
+            ]
+        },
+        {
+            "name": "trigger takeoff and switch",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "takeoff_and_switch",
+                "--height", "0.2"
+            ]
+        },
+        {
+            "name": "trigger hovering (policy)",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "hover_learned",
+                "--height", "0.2"
+            ]
+        },
+        {
+            "name": "trigger trajectory tracking",
+            "type": "python",
+            "request": "launch",
+            "program": "scripts/trigger.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--mode", "trajectory_tracking",
+                "--trajectory-scale", "0.3"
+            ]
+        }
+    ]
+}
