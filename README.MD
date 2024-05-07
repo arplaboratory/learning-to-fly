@@ -1,7 +1,7 @@
 # Learning to Fly in Seconds
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2311.13081">Paper on arXiv</a> | <a href="https://doi.org/10.1109/LRA.2024.3396025">Paper on IEEE Xplore</a>
+  <a href="https://arxiv.org/abs/2311.13081">arXiv</a> | <a href="https://doi.org/10.1109/LRA.2024.3396025">IEEE Xplore</a>
   </br>
 </p>
 
