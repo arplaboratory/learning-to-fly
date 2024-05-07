@@ -1,5 +1,10 @@
 # Learning to Fly in Seconds
 
+<p align="center">
+  <a href="https://arxiv.org/abs/2311.13081">Paper on arXiv</a> | <a href="https://doi.org/10.1109/LRA.2024.3396025">Paper on IEEE Xplore</a>
+  </br>
+</p>
+
 <div align="center">
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/training_simulation.gif" alt="animated" width='600'/>
 </div>
@@ -23,7 +28,7 @@ Trajectory tracking using a trained policy on a real Crazyflie (nano quadrotor).
 
 
 ## Introduction
-This repository contains the code for the paper [Learning to Fly in Seconds](https://arxiv.org/abs/2311.13081). It allows to train end-to-end control policies using deep reinforcement learning. The training is done in simulation and is finished within seconds on a consumer-grade laptop. The trained policies generalize and can be deployed on real quadrotors:
+This repository contains the code for the paper **Learning to Fly in Seconds** ([arXiv](https://arxiv.org/abs/2311.13081), [IEEE Xplore](https://doi.org/10.1109/LRA.2024.3396025)). It allows to train end-to-end control policies using deep reinforcement learning. The training is done in simulation and is finished within seconds on a consumer-grade laptop. The trained policies generalize and can be deployed on real quadrotors:
 <div align="center" >
 <img src="https://github.com/arplaboratory/learning_to_fly_media/blob/master/overview.jpg"/>
 </div>
