@@ -201,13 +201,16 @@ python3 scripts/trigger.py --mode trajectory_tracking --trajectory-scale 0.3
 ## Citing
 When using our code/setup in an academic work please cite our publication using the following Bibtex citation:
 ```
-@misc{eschmann2023learning,
-      title={Learning to Fly in Seconds}, 
-      author={Jonas Eschmann and Dario Albani and Giuseppe Loianno},
-      year={2023},
-      eprint={2311.13081},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO}
+@ARTICLE{eschmann2024learning,
+  author={Eschmann, Jonas and Albani, Dario and Loianno, Giuseppe},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Learning to Fly in Seconds}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Training;Quadrotors;Taxonomy;Complexity theory;Task analysis;Rotors;Motors;Aerial Systems: Applications;Machine Learning for Robot Control;Reinforcement Learning},
+  doi={10.1109/LRA.2024.3396025}
 }
 ```
 
