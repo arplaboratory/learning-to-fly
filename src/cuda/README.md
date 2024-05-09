@@ -11,3 +11,5 @@ cmake --build .
 ```
 
 Note that the parameters in `benchmark.cu` are optimized for a Nvidia T2000 so depending on the GPU used, tweaking the parameters might give a considerable speedup.
+
+Tested on Ubuntu 20.04 using CUDA 12.3
