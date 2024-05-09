@@ -23,7 +23,7 @@ using DEVICE_CPU = rlt::devices::CPU<rlt::devices::DefaultCPUSpecification>;
 using TI_GPU = DEVICE_CPU::index_t;
 using TI_CPU = DEVICE_CPU::index_t;
 
-using penv = parameters_fast_learning::environment<T, TI_GPU>;
+using penv = parameters_crazyflie::environment<T, TI_GPU>;
 using ENVIRONMENT = typename penv::ENVIRONMENT;
 using STATE = typename ENVIRONMENT::State;
 
@@ -174,46 +174,6 @@ int main(void) {
 
         std::cout << "Simulation time (GPU):  " << elapsedTime << " ms (" << N_BLOCKS * N_THREADS * N_ITERATIONS / (elapsedTime / 1000.0) / 1e6 << " Msteps/s, " << N_BLOCKS * N_THREADS * N_ITERATIONS * DT / (elapsedTime / 1000.0) / (365 * 24 * 3600) << " Years/s)" << std::endl;
     }
-
-//    // Copy a & b from the host to the device
-//    T diff = 0;
-//    for(int i=N_BLOCKS-N_BLOCKS_EVAL; i < N_BLOCKS; i++){
-//        for(int j=N_THREADS-N_THREADS_EVAL; j < N_THREADS; j++) {
-//            for (int k = 0; k < STATE_DIM; k++) {
-//                diff += std::fabs(state_cpu[i][j][k] - state_gpu[i][j][k]);
-//            }
-//        }
-//    }
-//    std::cout << "Average diff (cpu-gpu): " << diff/(T)(N_BLOCKS * N_THREADS) << std::endl;
-//
-//    std::cout << "Final state:" << std::endl;
-//    std::cout.precision(17);
-//    for(int i=0; i < STATE_DIM; i++){
-//        std::cout << state_cpu[N_BLOCKS-1][N_THREADS-1][i] << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    std::cout << "Final state comparison cpu <-> gpu:" << std::endl;
-//    for(int i=0; i < STATE_DIM; i++){
-//        std::cout << state_cpu[N_BLOCKS-1][N_THREADS-1][i] - state_gpu[N_BLOCKS-1][N_THREADS-1][i] << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    std::cout << "Final state comparison gpu <-> jax:" << std::endl;
-//    T acc = 0;
-//    for(int i=0; i < N_BLOCKS; i++){
-//        for(int j=0; j < N_THREADS; j++) {
-//            for (int i = 0; i < STATE_DIM; i++) {
-//                T diff = state_gpu[N_BLOCKS - 1][N_THREADS - 1][i] - expected_state2[i];
-//                acc += std::abs(diff);
-//                if(i == 0 && j == 0){
-//                    std::cout << diff << " ";
-//                }
-//            }
-//        }
-//    }
-//    std::cout << std::endl;
-//    std::cout << "Final state comparison gpu <-> jax (cumulative): " << acc / ((T)N_BLOCKS * N_THREADS) << std::endl;
 
 
     return 0;
