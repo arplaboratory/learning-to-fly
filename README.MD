@@ -97,7 +97,7 @@ Then instantiate some dependencies of `RLtools` (for conveniences like checkpoin
 git submodule update --init -- external/cli11 external/highfive external/json/ external/tensorboard tests/lib/googletest/
 ```
 
-#### Install dependencies on Ubuntu
+#### Install dependencies on Ubuntu (tested under 24.04)
 ```
 sudo apt update && sudo apt install libhdf5-dev libopenblas-dev protobuf-compiler libprotobuf-dev libboost-all-dev
 ```
