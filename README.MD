@@ -3,6 +3,7 @@
 We also split out the CUDA benchmark demo for easier replication at [rl-tools/l2f-benchmark](https://github.com/rl-tools/l2f-benchmark)
 >
 > L2F is maintained and evolved in [rl_tools/rl/environments/l2f](https://github.com/rl-tools/rl-tools/tree/master/include/rl_tools/rl/environments/l2f)
+
 > [Example training recipes](https://github.com/rl-tools/rl-tools/blob/master/src/rl/zoo/sac/l2f.h) are maintained as part of the RLtools Zoo (results at [https://zoo.rl.tools](https://zoo.rl.tools))
 > This repo is maintained to stay compatible with the most recent Ubuntu LTS version for replicating the results of the paper
 
