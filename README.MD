@@ -3,9 +3,6 @@
 > (Example training recipes)[https://github.com/rl-tools/rl-tools/blob/master/src/rl/zoo/sac/l2f.h] are maintained as part of the RLtools Zoo (results at (https://zoo.rl.tools)[https://zoo.rl.tools])
 > This repo is maintained to stay compatible with the most recent Ubuntu LTS version for replicating the results of the paper
 
-> **Note:** This is a note.
-> It can span multiple lines and will appear as a block.
-
 <p align="center">
   <a href="https://arxiv.org/abs/2311.13081">arXiv</a> | <a href="https://doi.org/10.1109/LRA.2024.3396025">IEEE Xplore</a>
   </br>
