@@ -137,7 +137,7 @@ cmake --build . -j8
 After successfully building the targets, we can run the code (in the original directory `learning_to_fly`):
 ```
 cd ..
-./build/src/training_headless 
+MKL_NUM_THREADS=1 ./build/src/training_headless 
 ```
 While this is running, you should be able to see training metrics using Tensorboard
 
