@@ -126,7 +126,7 @@ mkdir build
 cd build
 ```
 - Ubuntu + OpenBLAS: `cmake .. -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_OPENBLAS:BOOL=ON`
-- Ubuntu + MKL: `cmake .. -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
+- Ubuntu + MKL: `MKL_ROOT=/opt/intel/oneapi/mkl/latest cmake .. -DCMAKE_BUILD_TYPE=Release -DRL_TOOLS_BACKEND_ENABLE_MKL:BOOL=ON`
 - macOS (tested on Sonoma): `cmake .. -DCMAKE_BUILD_TYPE=Release`
 
 Finally, we can build the targets:
